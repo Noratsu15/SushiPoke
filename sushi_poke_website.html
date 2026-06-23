@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sushi Poke | El mejor sushi de Maracay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c41e3a;
+            --primary-dark: #8b0000;
+            --secondary: #1a1a1a;
+            --accent: #ff6b35;
+            --gold: #d4af37;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --gray: #6c757d;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light);
+            color: var(--secondary);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--light); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            padding: 12px 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(196, 30, 58, 0.3);
+            transition: var(--transition);
+        }
+        .header.scrolled { padding: 8px 0; }
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--white);
+        }
+        .logo-icon {
+            width: 50px; height: 50px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .logo-text {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .logo-text span { color: var(--gold); }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 12px 45px 12px 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            background: rgba(255,255,255,0.95);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        .search-bar input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+        }
+        .search-bar button {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .search-bar button:hover { background: var(--primary-dark); transform: translateY(-50%) scale(1.05); }
+
+        .nav-icons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .nav-icon {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            text-decoration: none;
+        }
+        .nav-icon:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        .cart-badge {
+            position: absolute;
+            top: -5px; right: -5px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 80px;
+            min-height: 85vh;
+            background: linear-gradient(135deg, var(--secondary) 0%, #2d1f1f 50%, var(--primary-dark) 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        .hero-pattern {
+            position: absolute;
+            right: -10%;
+            top: -10%;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.15;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, -30px); }
+        }
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .hero-content h1 span {
+            color: var(--gold);
+            display: block;
+            font-size: 3.2rem;
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 32px;
+            max-width: 500px;
+            line-height: 1.7;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--white);
+            box-shadow: 0 8px 25px rgba(196, 30, 58, 0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(196, 30, 58, 0.5);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+        .btn-outline:hover {
+            background: var(--white);
+            color: var(--secondary);
+            transform: translateY(-3px);
+        }
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.4);
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            transform: rotate(3deg);
+            transition: var(--transition);
+            animation: sushiFloat 4s ease-in-out infinite;
+        }
+        @keyframes sushiFloat {
+            0%, 100% { transform: rotate(3deg) translateY(0); }
+            50% { transform: rotate(3deg) translateY(-15px); }
+        }
+        .hero-image:hover img { transform: rotate(0deg) scale(1.02); }
+        .floating-badge {
+            position: absolute;
+            background: var(--white);
+            padding: 12px 20px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            font-weight: 700;
+            color: var(--primary);
+            animation: floatBadge 3s ease-in-out infinite;
+        }
+        .badge-1 { top: 10%; left: 0; animation-delay: 0s; }
+        .badge-2 { bottom: 15%; right: 0; animation-delay: 1.5s; color: var(--accent); }
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 80px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+        .section-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            margin: 16px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Promotions / Combos */
+        .promos-section { background: var(--white); }
+        .promos-slider {
+            position: relative;
+            overflow: hidden;
+        }
+        .promos-track {
+            display: flex;
+            gap: 24px;
+            transition: transform 0.5s ease;
+        }
+        .promo-card {
+            min-width: calc(33.333% - 16px);
+            background: linear-gradient(145deg, #fff5f5 0%, #ffffff 100%);
+            border: 2px solid rgba(196, 30, 58, 0.1);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+        }
+        .promo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(196, 30, 58, 0.3);
+        }
+        .promo-badge {
+            position: absolute;
+            top: 16px; left: 16px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .promo-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        .promo-card:hover .promo-image { transform: scale(1.05); }
+        .promo-content { padding: 24px; }
+        .promo-content h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--secondary);
+        }
+        .promo-content .desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            min-height: 60px;
+        }
+        .promo-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .promo-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .promo-price .currency { font-size: 0.9rem; color: var(--gray); }
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-add:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        .slider-btn {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .dot.active { background: var(--primary); width: 28px; border-radius: 5px; }
+
+        /* Menu Categories */
+        .menu-section { background: var(--light); }
+        .menu-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 40px;
+        }
+        .sidebar {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        .sidebar h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light);
+        }
+        .category-list {
+            list-style: none;
+        }
+        .category-list li {
+            padding: 12px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .category-list li:hover, .category-list li.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        .category-list li i { width: 20px; text-align: center; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            position: relative;
+        }
+        .product-tag {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: var(--gold);
+            color: var(--secondary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .product-info { padding: 20px; }
+        .product-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .product-info .product-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 4px;
+        }
+        .qty-btn {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: var(--white);
+            color: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qty-btn:hover { background: var(--primary); color: white; }
+        .qty-value { font-weight: 700; min-width: 20px; text-align: center; }
+
+        /* Location */
+        .location-section { background: linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 100%); color: white; }
+        .location-section .section-header h2, .location-section .section-header p { color: white; }
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .location-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius);
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+        .location-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        .location-detail {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        .location-detail i {
+            width: 44px; height: 44px;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .location-detail div h4 { font-size: 1rem; margin-bottom: 4px; }
+        .location-detail div p { color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.5; }
+        .location-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+        .map-container {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            height: 100%;
+            min-height: 400px;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            border: none;
+            filter: grayscale(0.3) contrast(1.1);
+        }
+
+        /* FAQ */
+        .faq-section { background: var(--white); }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .faq-register {
+            background: linear-gradient(145deg, #fff5f5, #ffffff);
+            border: 2px solid rgba(196, 30, 58, 0.1);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            position: sticky;
+            top: 100px;
+        }
+        .faq-register .logo-icon {
+            width: 80px; height: 80px;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+        .faq-register h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        .faq-register p { color: var(--gray); margin-bottom: 24px; }
+        .faq-register .btn { width: 100%; justify-content: center; margin-bottom: 12px; }
+        .faq-register .login-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .faq-register .login-link:hover { text-decoration: underline; }
+
+        .faq-list { display: flex; flex-direction: column; gap: 12px; }
+        .faq-item {
+            background: linear-gradient(145deg, var(--primary-dark), var(--primary));
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.2);
+        }
+        .faq-question {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .faq-question i { transition: var(--transition); }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            background: rgba(0,0,0,0.2);
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 0 24px 20px;
+        }
+        .faq-answer p {
+            color: rgba(255,255,255,0.9);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary);
+            color: white;
+            padding: 60px 24px 24px;
+        }
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-brand .logo { margin-bottom: 16px; }
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        .footer-col h4 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--gold);
+        }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        .footer-col ul li a:hover { color: var(--gold); padding-left: 4px; }
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .social-links a {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Cart Drawer */
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
+        .cart-drawer {
+            position: fixed;
+            top: 0; right: -420px;
+            width: 420px;
+            max-width: 100%;
+            height: 100vh;
+            background: white;
+            z-index: 2001;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.2);
+        }
+        .cart-drawer.active { right: 0; }
+        .cart-header {
+            padding: 24px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-header h3 { font-size: 1.3rem; }
+        .close-cart {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--light);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        .close-cart:hover { background: var(--primary); color: white; }
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        .cart-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        .cart-empty i { font-size: 3rem; margin-bottom: 16px; color: #ddd; }
+        .cart-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .cart-item img {
+            width: 70px; height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h4 { font-size: 0.95rem; margin-bottom: 4px; }
+        .cart-item-info .price { color: var(--primary); font-weight: 700; }
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        .remove-item:hover { color: var(--primary); }
+        .cart-footer {
+            padding: 24px;
+            border-top: 1px solid #eee;
+            background: #fafafa;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+        .cart-total span:last-child { font-weight: 800; color: var(--primary); font-size: 1.3rem; }
+        .cart-footer .btn { width: 100%; justify-content: center; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 20px;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .modal-overlay.active .modal { transform: scale(1); }
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+        .modal p.subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 28px;
+            font-size: 0.95rem;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-group input:focus { border-color: var(--primary); }
+        .modal .btn { width: 100%; justify-content: center; margin-top: 8px; }
+        .modal-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        .modal-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .close-modal {
+            position: absolute;
+            top: 16px; right: 16px;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--light);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        .close-modal:hover { background: var(--primary); color: white; }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 4000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background: var(--secondary);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast i { color: var(--gold); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container { grid-template-columns: 1fr; text-align: center; }
+            .hero-content p { margin: 0 auto 32px; }
+            .hero-buttons { justify-content: center; }
+            .hero-image { order: -1; max-width: 500px; margin: 0 auto; }
+            .menu-layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .promo-card { min-width: calc(50% - 12px); }
+            .location-grid, .faq-grid, .footer-grid { grid-template-columns: 1fr; }
+            .map-container { min-height: 300px; }
+        }
+        @media (max-width: 768px) {
+            .header-container { flex-wrap: wrap; }
+            .search-bar { order: 3; max-width: 100%; flex-basis: 100%; margin-top: 8px; }
+            .hero { margin-top: 130px; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content h1 span { font-size: 2rem; }
+            .section-header h2 { font-size: 1.8rem; }
+            .promo-card { min-width: 100%; }
+            .cart-drawer { width: 100%; }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🍣</div>
+                <div class="logo-text">Sushi <span>Poke</span></div>
+            </a>
+            <div class="search-bar">
+                <input type="text" placeholder="¿Qué te gustaría comer hoy?" id="searchInput">
+                <button onclick="handleSearch()"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-icons">
+                <a href="#hero" class="nav-icon" title="Inicio"><i class="fas fa-home"></i></a>
+                <a href="#menu" class="nav-icon" title="Menú"><i class="fas fa-utensils"></i></a>
+                <button class="nav-icon" onclick="openModal('loginModal')" title="Mi Cuenta"><i class="fas fa-user"></i></button>
+                <button class="nav-icon" onclick="toggleCart()" title="Carrito">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-pattern"></div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Sabor Oriental <span>en Maracay</span></h1>
+                <p>El mejor sushi de Venezuela te espera. Frescura, calidad y el auténtico sabor japonés en cada bocado. Delivery, pick up o disfruta en nuestro local.</p>
+                <div class="hero-buttons">
+                    <a href="#menu" class="btn btn-primary"><i class="fas fa-utensils"></i> Ver Menú</a>
+                    <a href="https://wa.me/584243678252" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Ordenar por WhatsApp</a>
+                    <a href="#promos" class="btn btn-outline"><i class="fas fa-fire"></i> Promociones</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&h=500&fit=crop" alt="Sushi Premium">
+                <div class="floating-badge badge-1">🔥 Desde 6$ BCV</div>
+                <div class="floating-badge badge-2">🍣 30 Piezas + Coca</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotions -->
+    <section class="section promos-section" id="promos">
+        <div class="section-header fade-in">
+            <h2>Promociones Especiales</h2>
+            <p>Las mejores ofertas para compartir o disfrutar solo. Solo por tiempo limitado.</p>
+            <div class="divider"></div>
+        </div>
+        <div class="promos-slider">
+            <div class="promos-track" id="promosTrack">
+                <div class="promo-card fade-in">
+                    <span class="promo-badge">Más Popular</span>
+                    <img src="https://images.unsplash.com/photo-1617196034796-73dfa7b491fd?w=500&h=300&fit=crop" alt="30 Piezas" class="promo-image">
+                    <div class="promo-content">
+                        <h3>Combo 30 Piezas</h3>
+                        <p class="desc">20 piezas de cangrejo y camarón + 10 piezas de pescado con cangrejo. Incluye 1 litro de Coca-Cola.</p>
+                        <div class="promo-footer">
+                            <div class="promo-price"><span class="currency">USD</span> $15.00</div>
+                            <button class="btn-add" onclick="addToCart('Combo 30 Piezas', 15, 'https://images.unsplash.com/photo-1617196034796-73dfa7b491fd?w=200&h=200&fit=crop')">
+                                <i class="fas fa-cart-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="promo-card fade-in">
+                    <span class="promo-badge">Promo BCV</span>
+                    <img src="https://images.unsplash.com/photo-1553621042-fae2f1e85b75?w=500&h=300&fit=crop" alt="20 Piezas" class="promo-image">
+                    <div class="promo-content">
+                        <h3>Promo 20 Piezas</h3>
+                        <p class="desc">20 piezas frías o tempurizadas a elección: camarón, cangrejo, pescado o pollo. Incluye Glup 1L.</p>
+                        <div class="promo-footer">
+                            <div class="promo-price"><span class="currency">BCV</span> 10.00</div>
+                            <button class="btn-add" onclick="addToCart('Promo 20 Piezas', 10, 'https://images.unsplash.com/photo-1553621042-fae2f1e85b75?w=200&h=200&fit=crop')">
+                                <i class="fas fa-cart-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="promo-card fade-in">
+                    <span class="promo-badge">Económico</span>
+                    <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500&h=300&fit=crop" alt="10 Piezas" class="promo-image">
+                    <div class="promo-content">
+                        <h3>Promo 10 Piezas</h3>
+                        <p class="desc">10 piezas frías o tempurizadas con 1 proteína a elección. Incluye Glup 400ml. Perfecto para uno.</p>
+                        <div class="promo-footer">
+                            <div class="promo-price"><span class="currency">BCV</span> 6.00</div>
+                            <button class="btn-add" onclick="addToCart('Promo 10 Piezas', 6, 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=200&h=200&fit=crop')">
+                                <i class="fas fa-cart-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="promo-card fade-in">
+                    <span class="promo-badge">Nuevo</span>
+                    <img src="https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=500&h=300&fit=crop" alt="Poke Bowl" class="promo-image">
+                    <div class="promo-content">
+                        <h3>Poke Bowl Premium</h3>
+                        <p class="desc">Arroz de sushi, salmón fresco, aguacate, edamame, alga nori y salsa de sésamo. Un explosión de sabor.</p>
+                        <div class="promo-footer">
+                            <div class="promo-price"><span class="currency">USD</span> $8.50</div>
+                            <button class="btn-add" onclick="addToCart('Poke Bowl Premium', 8.5, 'https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=200&h=200&fit=crop')">
+                                <i class="fas fa-cart-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slider-controls">
+            <button class="slider-btn" onclick="moveSlider(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="slider-btn" onclick="moveSlider(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="slider-dots" id="sliderDots"></div>
+    </section>
+
+    <!-- Menu -->
+    <section class="section menu-section" id="menu">
+        <div class="section-header fade-in">
+            <h2>Nuestro Menú</h2>
+            <p>Descubre nuestra variedad de rolls, entradas y bebidas preparadas con los mejores ingredientes.</p>
+            <div class="divider"></div>
+        </div>
+        <div class="menu-layout">
+            <aside class="sidebar fade-in">
+                <h3><i class="fas fa-list"></i> Categorías</h3>
+                <ul class="category-list">
+                    <li class="active" onclick="filterCategory('all', this)"><i class="fas fa-th-large"></i> Todo</li>
+                    <li onclick="filterCategory('rolls', this)"><i class="fas fa-fish"></i> Rolls & Sushi</li>
+                    <li onclick="filterCategory('entradas', this)"><i class="fas fa-drumstick-bite"></i> Entradas</li>
+                    <li onclick="filterCategory('poke', this)"><i class="fas fa-bowl-rice"></i> Poke Bowls</li>
+                    <li onclick="filterCategory('bebidas', this)"><i class="fas fa-wine-glass"></i> Bebidas</li>
+                    <li onclick="filterCategory('postres', this)"><i class="fas fa-ice-cream"></i> Postres</li>
+                </ul>
+            </aside>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Location -->
+    <section class="section location-section" id="location">
+        <div class="section-header fade-in">
+            <h2>Nuestra Sede</h2>
+            <p>Visítanos en el corazón de Maracay. Calle San Ignacio, a pocos metros de Los Cedros.</p>
+            <div class="divider"></div>
+        </div>
+        <div class="location-grid">
+            <div class="location-card fade-in">
+                <h3><i class="fas fa-store"></i> Sushi Poke Maracay</h3>
+                <div class="location-detail">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Dirección</h4>
+                        <p>Calle San Ignacio, a pocos metros de Los Cedros. Maracay, Edo. Aragua, Venezuela.</p>
+                    </div>
+                </div>
+                <div class="location-detail">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h4>Horario</h4>
+                        <p>Lunes a Sábado: 11:00 AM - 9:00 PM<br>Domingo: 12:00 PM - 8:00 PM</p>
+                    </div>
+                </div>
+                <div class="location-detail">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h4>Contacto</h4>
+                        <p>WhatsApp: +58 424-3678252<br>Teléfono: (0243) 000-0000</p>
+                    </div>
+                </div>
+                <div class="location-actions">
+                    <a href="https://wa.me/584243678252" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Escribir por WhatsApp</a>
+                    <a href="https://www.instagram.com/sushipokeoficial/" target="_blank" class="btn btn-outline"><i class="fab fa-instagram"></i> Instagram</a>
+                </div>
+            </div>
+            <div class="map-container fade-in">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3926.0!2d-67.5936!3d10.2353!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDE0JzA3LjEiTiA2N8KwMzUnMzYuOSJX!5e0!3m2!1ses!2sve!4v1" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq-section" id="faq">
+        <div class="section-header fade-in">
+            <h2>Preguntas Frecuentes</h2>
+            <p>Resolvemos tus dudas para que disfrutes la mejor experiencia.</p>
+            <div class="divider"></div>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-register fade-in">
+                <div class="logo-icon">🍣</div>
+                <h3>¡Regístrate para una mejor experiencia!</h3>
+                <p>Guarda tus direcciones, revisa tus pedidos anteriores y recibe promociones exclusivas.</p>
+                <button class="btn btn-primary" onclick="openModal('registerModal')">Regístrate Ya</button>
+                <p style="margin-top: 16px; font-size: 0.9rem;">¿Ya tienes una cuenta? <a href="#" class="login-link" onclick="openModal('loginModal'); return false;">Ingresa</a></p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item active">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>¿Hasta qué hora trabaja el servicio de delivery?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Nuestro servicio de delivery está disponible hasta las 8:30 PM de lunes a sábado y hasta las 7:30 PM los domingos. Los pedidos deben realizarse con al menos 30 minutos de anticipación al cierre.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>¿Cuánto tiempo demora el delivery?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>El tiempo promedio de entrega es de 30 a 50 minutos dependiendo de la zona y el tráfico. Te mantendremos informado por WhatsApp sobre el estado de tu pedido.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>¿Se pueden hacer reservaciones?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sí, aceptamos reservaciones para mesas en nuestro local. Escríbenos por WhatsApp con anticipación para asegurar tu espacio, especialmente los fines de semana.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>¿Aceptan pagos en divisas y BCV?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sí, aceptamos pagos en efectivo (USD y Bs. a tasa del día), transferencias bancarias, Zelle, Binance Pay y pago móvil. Consulta nuestras tasas actualizadas al momento de ordenar.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>¿Tienen opciones vegetarianas?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Contamos con rolls vegetarianos que incluyen aguacate, pepino, zanahoria, queso crema y otros vegetales frescos. Pregunta por nuestro menú veggie al ordenar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <div class="logo-icon">🍣</div>
+                    <div class="logo-text">Sushi <span>Poke</span></div>
+                </a>
+                <p>El mejor sushi de Maracay desde 2019. Calidad, frescura y sabor oriental en cada bocado. Delivery, pick up y servicio en local.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/sushipokeoficial/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/584243678252" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Menú</h4>
+                <ul>
+                    <li><a href="#promos">Promociones</a></li>
+                    <li><a href="#menu">Rolls & Sushi</a></li>
+                    <li><a href="#menu">Poke Bowls</a></li>
+                    <li><a href="#menu">Bebidas</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Empresa</h4>
+                <ul>
+                    <li><a href="#location">Nuestra Sede</a></li>
+                    <li><a href="#faq">Preguntas Frecuentes</a></li>
+                    <li><a href="#">Trabaja con Nosotros</a></li>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <ul>
+                    <li><a href="https://wa.me/584243678252" target="_blank">+58 424-3678252</a></li>
+                    <li><a href="#">Calle San Ignacio, Maracay</a></li>
+                    <li><a href="#">sushipokeoficial@gmail.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Sushi Poke 2025 &copy; Todos los derechos reservados. Diseñado con ❤️ en Maracay, Venezuela.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Tu Pedido</h3>
+            <button class="close-cart" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+                <span style="font-size: 0.9rem;">¡Agrega algunos rolls deliciosos!</span>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="btn btn-whatsapp" onclick="checkout()">
+                <i class="fab fa-whatsapp"></i> Completar pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal" onclick="closeModalOnOverlay(event, 'loginModal')">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">Accede a tu cuenta para pedidos más rápidos</p>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+            </form>
+            <div class="modal-footer">
+                ¿No tienes cuenta? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Regístrate</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal" onclick="closeModalOnOverlay(event, 'registerModal')">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal('registerModal')"><i class="fas fa-times"></i></button>
+            <h2>Crear Cuenta</h2>
+            <p class="subtitle">Únete y recibe promociones exclusivas</p>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" placeholder="Juan Pérez" required>
+                </div>
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" placeholder="+58 424-0000000" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrarme</button>
+            </form>
+            <div class="modal-footer">
+                ¿Ya tienes cuenta? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // Data
+        const products = [
+            { id: 1, name: "California Roll", category: "rolls", price: 5, desc: "Cangrejo, aguacate y pepino con sésamo.", img: "https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=300&h=200&fit=crop" },
+            { id: 2, name: "Philadelphia Roll", category: "rolls", price: 6, desc: "Salmón, queso crema y aguacate.", img: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=300&h=200&fit=crop" },
+            { id: 3, name: "Spicy Tuna Roll", category: "rolls", price: 6.5, desc: "Atún picante, mayonesa japonesa y cebollín.", img: "https://images.unsplash.com/photo-1617196034796-73dfa7b491fd?w=300&h=200&fit=crop" },
+            { id: 4, name: "Tempura Roll", category: "rolls", price: 7, desc: "Camarón tempura, aguacate y salsa teriyaki.", img: "https://images.unsplash.com/photo-1553621042-fae2f1e85b75?w=300&h=200&fit=crop" },
+            { id: 5, name: "Sashimi Mixto", category: "rolls", price: 12, desc: "12 piezas de sashimi: salmón, atún y pez blanco.", img: "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=300&h=200&fit=crop" },
+            { id: 6, name: "Gyozas (6u)", category: "entradas", price: 4, desc: "Empanadillas japonesas de cerdo al vapor y selladas.", img: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=300&h=200&fit=crop" },
+            { id: 7, name: "Edamame", category: "entradas", price: 3, desc: "Vainas de soja salteadas con sal de mar.", img: "https://images.unsplash.com/photo-1625938145744-e38051539994?w=300&h=200&fit=crop" },
+            { id: 8, name: "Poke Salmón", category: "poke", price: 9, desc: "Arroz, salmón, aguacate, edamame y salsa sésamo.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=200&fit=crop" },
+            { id: 9, name: "Poke Atún", category: "poke", price: 9.5, desc: "Arroz, atún, mango, alga nori y aderezo spicy.", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&h=200&fit=crop" },
+            { id: 10, name: "Coca-Cola 1L", category: "bebidas", price: 2, desc: "Refresco de cola.", img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300&h=200&fit=crop" },
+            { id: 11, name: "Té Verde", category: "bebidas", price: 1.5, desc: "Té verde japonés frío o caliente.", img: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=200&fit=crop" },
+            { id: 12, name: "Mochi (3u)", category: "postres", price: 4, desc: "Dulce japonés de arroz relleno de helado.", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&h=200&fit=crop" }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('sushiCart')) || [];
+        let currentCategory = 'all';
+        let sliderIndex = 0;
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateCartUI();
+            initSliderDots();
+            initScrollAnimations();
+            initHeaderScroll();
+        });
+
+        // Products
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('productsGrid');
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="product-card fade-in visible">
+                    <div style="position: relative; overflow: hidden;">
+                        <img src="${p.img}" alt="${p.name}" class="product-image" loading="lazy">
+                        ${p.category === 'rolls' ? '<span class="product-tag">TOP</span>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <h4>${p.name}</h4>
+                        <p class="product-desc">${p.desc}</p>
+                        <div class="product-meta">
+                            <span class="product-price">$${p.price.toFixed(2)}</span>
+                            <button class="btn-add" onclick="addToCart('${p.name}', ${p.price}, '${p.img}')">
+                                <i class="fas fa-plus"></i> Añadir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat, el) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-list li').forEach(li => li.classList.remove('active'));
+            el.classList.add('active');
+            renderProducts(cat);
+        }
+
+        // Cart
+        function addToCart(name, price, img) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ name, price, img, qty: 1 });
+            }
+            saveCart();
+            updateCartUI();
+            showToast(`${name} añadido al carrito`);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveCart();
+            updateCartUI();
+        }
+
+        function updateQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) removeFromCart(index);
+            else { saveCart(); updateCartUI(); }
+        }
+
+        function saveCart() {
+            localStorage.setItem('sushiCart', JSON.stringify(cart));
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const itemsContainer = document.getElementById('cartItems');
+            const footer = document.getElementById('cartFooter');
+            const totalEl = document.getElementById('cartTotal');
+
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            badge.textContent = totalQty;
+            badge.style.display = totalQty > 0 ? 'flex' : 'none';
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-basket"></i>
+                        <p>Tu carrito está vacío</p>
+                        <span style="font-size: 0.9rem;">¡Agrega algunos rolls deliciosos!</span>
+                    </div>`;
+                footer.style.display = 'none';
+            } else {
+                itemsContainer.innerHTML = cart.map((item, i) => `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <span class="price">$${(item.price * item.qty).toFixed(2)}</span>
+                            <div class="qty-control" style="margin-top: 6px; display: inline-flex;">
+                                <button class="qty-btn" onclick="updateQty(${i}, -1)">-</button>
+                                <span class="qty-value">${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${i}, 1)">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${i})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `).join('');
+                footer.style.display = 'block';
+                totalEl.textContent = '$' + totalPrice.toFixed(2);
+            }
+        }
+
+        function toggleCart() {
+            document.getElementById('cartDrawer').classList.toggle('active');
+            document.getElementById('cartOverlay').classList.toggle('active');
+            document.body.style.overflow = document.getElementById('cartDrawer').classList.contains('active') ? 'hidden' : '';
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            let msg = "¡Hola Sushi Poke! Quiero hacer un pedido:%0A%0A";
+            let total = 0;
+            cart.forEach(item => {
+                msg += `• ${item.name} x${item.qty} - $${(item.price * item.qty).toFixed(2)}%0A`;
+                total += item.price * item.qty;
+            });
+            msg += `%0ATotal: $${total.toFixed(2)}%0A%0AGracias!`;
+            window.open(`https://wa.me/584243678252?text=${msg}`, '_blank');
+        }
+
+        // Slider
+        function initSliderDots() {
+            const track = document.getElementById('promosTrack');
+            const cards = track.children;
+            const dotsContainer = document.getElementById('sliderDots');
+            const dotsCount = Math.ceil(cards.length / 3);
+
+            dotsContainer.innerHTML = Array.from({length: dotsCount}, (_, i) => 
+                `<div class="dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
+            ).join('');
+        }
+
+        function moveSlider(dir) {
+            const track = document.getElementById('promosTrack');
+            const cards = track.children;
+            const maxIndex = Math.ceil(cards.length / 3) - 1;
+
+            sliderIndex += dir;
+            if (sliderIndex < 0) sliderIndex = maxIndex;
+            if (sliderIndex > maxIndex) sliderIndex = 0;
+
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            sliderIndex = index;
+            updateSlider();
+        }
+
+        function updateSlider() {
+            const track = document.getElementById('promosTrack');
+            const cardWidth = track.children[0]?.offsetWidth + 24 || 0;
+            track.style.transform = `translateX(-${sliderIndex * cardWidth * 3}px)`;
+
+            document.querySelectorAll('.dot').forEach((d, i) => {
+                d.classList.toggle('active', i === sliderIndex);
+            });
+        }
+
+        // FAQ
+        function toggleFaq(el) {
+            const item = el.parentElement;
+            const wasActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            if (!wasActive) item.classList.add('active');
+        }
+
+        // Modal
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeModalOnOverlay(e, id) {
+            if (e.target === document.getElementById(id)) closeModal(id);
+        }
+
+        function switchModal(from, to) {
+            closeModal(from);
+            setTimeout(() => openModal(to), 200);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            showToast('¡Bienvenido de vuelta!');
+            closeModal('loginModal');
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            showToast('¡Cuenta creada exitosamente!');
+            closeModal('registerModal');
+        }
+
+        // Search
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            if (!query) return;
+
+            const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
+            const grid = document.getElementById('productsGrid');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 12px;"></i><p>No encontramos productos con "' + query + '"</p></div>';
+            } else {
+                grid.innerHTML = filtered.map(p => `
+                    <div class="product-card fade-in visible">
+                        <div style="position: relative; overflow: hidden;">
+                            <img src="${p.img}" alt="${p.name}" class="product-image" loading="lazy">
+                        </div>
+                        <div class="product-info">
+                            <h4>${p.name}</h4>
+                            <p class="product-desc">${p.desc}</p>
+                            <div class="product-meta">
+                                <span class="product-price">$${p.price.toFixed(2)}</span>
+                                <button class="btn-add" onclick="addToCart('${p.name}', ${p.price}, '${p.img}')">
+                                    <i class="fas fa-plus"></i> Añadir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+
+        // Toast
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            container.appendChild(toast);
+
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
+
+        // Header scroll
+        function initHeaderScroll() {
+            window.addEventListener('scroll', () => {
+                document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+            });
+        }
+    </script>
+</body>
+</html>
