@@ -303,7 +303,9 @@
                     <li><a href="#location">Nuestra Sede</a></li>
                     <li><a href="#faq">Preguntas Frecuentes</a></li>
                     <li><a href="#">Trabaja con Nosotros</a></li>
-                    <li><a href="#">Términos y Condiciones</a></li>
+                    <li><a href="/terminos.html">Términos y Condiciones</a></li>
+                    <li><a href="/privacidad">Política de Privacidad</a></li>
+                    <li><a href="/cookies">Política de Cookies</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -339,7 +341,7 @@
                 <span>Total:</span>
                 <span id="cartTotal">$0.00</span>
             </div>
-            <button class="btn btn-whatsapp" onclick="checkout()">
+            <button class="btn btn-whatsapp" onclick="checkoutWithDB()">
                 <i class="fab fa-whatsapp"></i> Completar pedido por WhatsApp
             </button>
         </div>
@@ -359,6 +361,13 @@
                 <div class="form-group">
                     <label>Contraseña</label>
                     <input type="password" placeholder="••••••••" required>
+                </div>
+                <div>
+                    <p style="text-align:right;margin:-8px 0 6px">
+                        <a href="#" style="color:var(--primary);font-size:.85rem;font-weight:600;text-decoration:none"
+                           onclick="closeModal('loginModal');openModal('recoveryModal');return false;">
+                           ¿Olvidaste tu contraseña?</a>
+                    </p>
                 </div>
                 <button type="submit" class="btn btn-primary">Ingresar</button>
             </form>
@@ -398,6 +407,22 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Recuperación de Contraseña -->
+    <div class="modal-overlay" id="recoveryModal" onclick="closeModalOnOverlay(event,'recoveryModal')">
+        <div class="modal">
+          <button class="close-modal" onclick="closeModal('recoveryModal')"><i class="fas fa-times"></i></button>
+          <h2>Recuperar contraseña</h2>
+          <p class="subtitle">Te enviaremos un enlace a tu correo</p>
+          <form onsubmit="handleRecoveryRequest(event)">
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <input type="email" placeholder="tu@email.com" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar enlace</button>
+          </form>
+        </div>
+      </div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
@@ -703,5 +728,10 @@
             });
         }
     </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/orders.js"></script> 
 </body>
 </html>
