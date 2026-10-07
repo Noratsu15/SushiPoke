@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+    <title>404 · Página no encontrada | Sushi Poke Maracay</title>
+    <meta name="robots" content="noindex">
+    <style>
+        body { background: linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 50%, #8b0000 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .nf-wrap { text-align: center; color: #fff; padding: 24px; position: relative; z-index: 2; }
+        .nf-sushi { font-size: 6rem; display: inline-block; animation: nfFloat 4s ease-in-out infinite; filter: drop-shadow(0 20px 30px rgba(0,0,0,.4)); }
+        @keyframes nfFloat { 0%,100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-18px) rotate(8deg); } }
+        .nf-code { font-size: clamp(5rem, 18vw, 10rem); font-weight: 800; line-height: 1; background: linear-gradient(135deg, #d4af37, #ff6b35); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 8px 0; }
+        .nf-wrap h1 { font-size: 1.6rem; margin-bottom: 12px; }
+        .nf-wrap p { color: rgba(255,255,255,.75); max-width: 440px; margin: 0 auto 28px; line-height: 1.7; }
+        .nf-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .nf-bubble { position: absolute; border-radius: 50%; background: radial-gradient(circle, rgba(255,107,53,.25), transparent 70%); animation: nfFloat 7s ease-in-out infinite; }
+        .b1 { width: 340px; height: 340px; top: -100px; left: -80px; }
+        .b2 { width: 260px; height: 260px; bottom: -60px; right: -40px; animation-delay: 2s; }
+        .b3 { width: 180px; height: 180px; bottom: 20%; left: 12%; animation-delay: 4s; }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="nf-bubble b1"></div>
+    <div class="nf-bubble b2"></div>
+    <div class="nf-bubble b3"></div>
+    <div class="nf-wrap">
+        <span class="nf-sushi">🍣</span>
+        <div class="nf-code">404</div>
+        <h1>¡Esta página se la comieron!</h1>
+        <p>El roll que buscas no existe o fue movido a otro plato. No te vayas con hambre: vuelve al inicio o mira nuestro menú.</p>
+        <div class="nf-btns">
+            <a href="/" class="btn btn-primary"><i class="fas fa-home"></i> Volver al inicio</a>
+            <a href="/#menu" class="btn btn-whatsapp"><i class="fas fa-utensils"></i> Ver el menú</a>
+            <a href="https://wa.me/584243678252" target="_blank" class="btn btn-outline"><i class="fab fa-whatsapp"></i> Pedir por WhatsApp</a>
+        </div>
+    </div>
+</body>
+</html>

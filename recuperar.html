@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+    <title>Recuperar contraseña | Sushi Poke Maracay</title>
+    <meta name="robots" content="noindex">
+    <style>
+        body { background: linear-gradient(135deg, #1a1a1a 0%, #2d1f1f 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-card { background: #fff; border-radius: 20px; padding: 44px 36px; width: 100%; max-width: 430px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+        .auth-card .logo-icon { margin: 0 auto 16px; }
+        .auth-card h1 { text-align: center; font-size: 1.4rem; margin-bottom: 6px; }
+        .auth-card > p { text-align: center; color: var(--gray); font-size: .92rem; margin-bottom: 26px; line-height: 1.6; }
+        .auth-card .form-group label { font-size: .88rem; }
+        .auth-card .btn { width: 100%; justify-content: center; margin-top: 6px; }
+        .auth-back { display: block; text-align: center; margin-top: 18px; color: var(--primary); text-decoration: none; font-size: .88rem; font-weight: 600; }
+        .auth-back:hover { text-decoration: underline; }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="auth-card">
+        <div class="logo-icon">🍣</div>
+        <h1>¿Olvidaste tu contraseña?</h1>
+        <p>Ingresa el correo de tu cuenta y te enviaremos un enlace para crear una nueva clave.</p>
+        <form onsubmit="handleRecoveryRequest(event)">
+            <div class="form-group">
+                <label>Correo electrónico</label>
+                <input type="email" placeholder="tu@email.com" required autocomplete="email">
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar enlace</button>
+        </form>
+        <a href="/" class="auth-back"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
