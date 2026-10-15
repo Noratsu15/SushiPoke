@@ -222,7 +222,7 @@
             const track = document.getElementById('promosTrack');
             const cards = track.children;
             const dotsContainer = document.getElementById('sliderDots');
-            const dotsCount = Math.ceil(cards.length / 3);
+            const dotsCount = Math.ceil(cards.length / 1);
 
             dotsContainer.innerHTML = Array.from({length: dotsCount}, (_, i) => 
                 `<div class="dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
@@ -232,7 +232,7 @@
         function moveSlider(dir) {
             const track = document.getElementById('promosTrack');
             const cards = track.children;
-            const maxIndex = Math.ceil(cards.length / 3) - 1;
+            const maxIndex = Math.ceil(cards.length / 1) - 1;
 
             sliderIndex += dir;
             if (sliderIndex < 0) sliderIndex = maxIndex;
@@ -249,7 +249,7 @@
         function updateSlider() {
             const track = document.getElementById('promosTrack');
             const cardWidth = track.children[0]?.offsetWidth + 24 || 0;
-            track.style.transform = `translateX(-${sliderIndex * cardWidth * 3}px)`;
+            track.style.transform = `translateX(-${sliderIndex * cardWidth * 1}px)`;
 
             document.querySelectorAll('.dot').forEach((d, i) => {
                 d.classList.toggle('active', i === sliderIndex);

@@ -115,13 +115,13 @@
                 </div>
                 <div class="promo-card fade-in">
                     <span class="promo-badge">Nuevo</span>
-                    <img src="https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=500&h=300&fit=crop" alt="Poke Bowl" class="promo-image">
+                    <img src="https://ik.imagekit.io/ugythf2a3/SushiPoke_combos/promo-barco.png" alt="Poke Bowl" class="promo-image">
                     <div class="promo-content">
                         <h3>Promo Barco</h3>
                         <p class="desc">Barco de sushi de 30 roles tanto tempurizados como fríos con hilos crocantes de batata. incluye un vaso de refresco. Una explosión de sabor.</p>
                         <div class="promo-footer">
                             <div class="promo-price"><span class="currency">USD</span> $15</div>
-                            <button class="btn-add" onclick="addToCart('Promo Barco', 15, 'https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=200&h=200&fit=crop')">
+                            <button class="btn-add" onclick="addToCart('Promo Barco', 15, 'https://ik.imagekit.io/ugythf2a3/SushiPoke_combos/promo-barco.png')">
                                 <i class="fas fa-cart-plus"></i> Añadir
                             </button>
                         </div>
@@ -148,11 +148,12 @@
                 <h3><i class="fas fa-list"></i> Categorías</h3>
                 <ul class="category-list">
                     <li class="active" onclick="filterCategory('all', this)"><i class="fas fa-th-large"></i> Todo</li>
-                    <li onclick="filterCategory('rolls', this)"><i class="fas fa-fish"></i> Rolls & Sushi</li>
+                    <li onclick="filterCategory('rolls', this)"><i class="fas fa-fish"></i> Rolls fríos</li>
+                    <li onclick="filterCategory('tempurizados', this)"><i class="fas fa-fire"></i> Tempurizados</li>
                     <li onclick="filterCategory('entradas', this)"><i class="fas fa-drumstick-bite"></i> Entradas</li>
+                    <li onclick="filterCategory('ensaladas', this)"><i class="fas fa-leaf"></i> Ensaladas</li>
                     <li onclick="filterCategory('poke', this)"><i class="fas fa-bowl-rice"></i> Poke Bowls</li>
                     <li onclick="filterCategory('bebidas', this)"><i class="fas fa-wine-glass"></i> Bebidas</li>
-                    <li onclick="filterCategory('postres', this)"><i class="fas fa-ice-cream"></i> Postres</li>
                 </ul>
             </aside>
             <div class="products-grid" id="productsGrid">
@@ -427,309 +428,9 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <script>
-        // Data
-        const products = [
-            { id: 1, name: "California Roll", category: "rolls", price: 5, desc: "Cangrejo, aguacate y pepino con sésamo.", img: "https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=300&h=200&fit=crop" },
-            { id: 2, name: "Philadelphia Roll", category: "rolls", price: 6, desc: "Salmón, queso crema y aguacate.", img: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=300&h=200&fit=crop" },
-            { id: 3, name: "Spicy Tuna Roll", category: "rolls", price: 6.5, desc: "Atún picante, mayonesa japonesa y cebollín.", img: "https://6a9ad419d601bb7bf57cab50.imgix.net/Spicy-tuna-roll.png" },
-            { id: 4, name: "Tempura Roll", category: "rolls", price: 7, desc: "Camarón tempura, aguacate y salsa teriyaki.", img: "https://6a9ad419d601bb7bf57cab50.imgix.net/tempura-roll.png" },
-            { id: 5, name: "Sashimi Mixto", category: "rolls", price: 12, desc: "12 piezas de sashimi: salmón, atún y pez blanco.", img: "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=300&h=200&fit=crop" },
-            { id: 6, name: "Gyozas (6u)", category: "entradas", price: 4, desc: "Empanadillas japonesas de cerdo al vapor y selladas.", img: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=300&h=200&fit=crop" },
-            { id: 7, name: "Edamame", category: "entradas", price: 3, desc: "Vainas de soja salteadas con sal de mar.", img: "https://6a9ad419d601bb7bf57cab50.imgix.net/edamame.png" },
-            { id: 8, name: "Poke Salmón", category: "poke", price: 9, desc: "Arroz, salmón, aguacate, edamame y salsa sésamo.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=200&fit=crop" },
-            { id: 9, name: "Poke Atún", category: "poke", price: 9.5, desc: "Arroz, atún, mango, alga nori y aderezo spicy.", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&h=200&fit=crop" },
-            { id: 10, name: "Coca-Cola 1L", category: "bebidas", price: 2, desc: "Refresco de cola.", img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=300&h=200&fit=crop" },
-            { id: 11, name: "Té Verde", category: "bebidas", price: 1.5, desc: "Té verde japonés frío o caliente.", img: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=300&h=200&fit=crop" },
-            { id: 12, name: "Mochi (3u)", category: "postres", price: 4, desc: "Dulce japonés de arroz relleno de helado.", img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&h=200&fit=crop" }
-        ];
+    <script src="js/main.js"></script>
 
-        let cart = JSON.parse(localStorage.getItem('sushiCart')) || [];
-        let currentCategory = 'all';
-        let sliderIndex = 0;
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            renderProducts();
-            updateCartUI();
-            initSliderDots();
-            initScrollAnimations();
-            initHeaderScroll();
-        });
-
-        // Products
-        function renderProducts(filter = 'all') {
-            const grid = document.getElementById('productsGrid');
-            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-
-            grid.innerHTML = filtered.map(p => `
-                <div class="product-card fade-in visible">
-                    <div style="position: relative; overflow: hidden;">
-                        <img src="${p.img}" alt="${p.name}" class="product-image" loading="lazy">
-                        ${p.category === 'rolls' ? '<span class="product-tag">TOP</span>' : ''}
-                    </div>
-                    <div class="product-info">
-                        <h4>${p.name}</h4>
-                        <p class="product-desc">${p.desc}</p>
-                        <div class="product-meta">
-                            <span class="product-price">$${p.price.toFixed(2)}</span>
-                            <button class="btn-add" onclick="addToCart('${p.name}', ${p.price}, '${p.img}')">
-                                <i class="fas fa-plus"></i> Añadir
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function filterCategory(cat, el) {
-            currentCategory = cat;
-            document.querySelectorAll('.category-list li').forEach(li => li.classList.remove('active'));
-            el.classList.add('active');
-            renderProducts(cat);
-        }
-
-        // Cart
-        function addToCart(name, price, img) {
-            const existing = cart.find(item => item.name === name);
-            if (existing) {
-                existing.qty++;
-            } else {
-                cart.push({ name, price, img, qty: 1 });
-            }
-            saveCart();
-            updateCartUI();
-            showToast(`${name} añadido al carrito`);
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            saveCart();
-            updateCartUI();
-        }
-
-        function updateQty(index, delta) {
-            cart[index].qty += delta;
-            if (cart[index].qty <= 0) removeFromCart(index);
-            else { saveCart(); updateCartUI(); }
-        }
-
-        function saveCart() {
-            localStorage.setItem('sushiCart', JSON.stringify(cart));
-        }
-
-        function updateCartUI() {
-            const badge = document.getElementById('cartBadge');
-            const itemsContainer = document.getElementById('cartItems');
-            const footer = document.getElementById('cartFooter');
-            const totalEl = document.getElementById('cartTotal');
-
-            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-
-            badge.textContent = totalQty;
-            badge.style.display = totalQty > 0 ? 'flex' : 'none';
-
-            if (cart.length === 0) {
-                itemsContainer.innerHTML = `
-                    <div class="cart-empty">
-                        <i class="fas fa-shopping-basket"></i>
-                        <p>Tu carrito está vacío</p>
-                        <span style="font-size: 0.9rem;">¡Agrega algunos rolls deliciosos!</span>
-                    </div>`;
-                footer.style.display = 'none';
-            } else {
-                itemsContainer.innerHTML = cart.map((item, i) => `
-                    <div class="cart-item">
-                        <img src="${item.img}" alt="${item.name}">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <span class="price">$${(item.price * item.qty).toFixed(2)}</span>
-                            <div class="qty-control" style="margin-top: 6px; display: inline-flex;">
-                                <button class="qty-btn" onclick="updateQty(${i}, -1)">-</button>
-                                <span class="qty-value">${item.qty}</span>
-                                <button class="qty-btn" onclick="updateQty(${i}, 1)">+</button>
-                            </div>
-                        </div>
-                        <button class="remove-item" onclick="removeFromCart(${i})"><i class="fas fa-trash"></i></button>
-                    </div>
-                `).join('');
-                footer.style.display = 'block';
-                totalEl.textContent = '$' + totalPrice.toFixed(2);
-            }
-        }
-
-        function toggleCart() {
-            document.getElementById('cartDrawer').classList.toggle('active');
-            document.getElementById('cartOverlay').classList.toggle('active');
-            document.body.style.overflow = document.getElementById('cartDrawer').classList.contains('active') ? 'hidden' : '';
-        }
-
-        function checkout() {
-            if (cart.length === 0) return;
-            let msg = "¡Hola Sushi Poke! Quiero hacer un pedido:%0A%0A";
-            let total = 0;
-            cart.forEach(item => {
-                msg += `• ${item.name} x${item.qty} - $${(item.price * item.qty).toFixed(2)}%0A`;
-                total += item.price * item.qty;
-            });
-            msg += `%0ATotal: $${total.toFixed(2)}%0A%0AGracias!`;
-            window.open(`https://wa.me/584243678252?text=${msg}`, '_blank');
-        }
-
-        // Slider
-        function initSliderDots() {
-            const track = document.getElementById('promosTrack');
-            const cards = track.children;
-            const dotsContainer = document.getElementById('sliderDots');
-            const dotsCount = Math.ceil(cards.length / 3);
-
-            dotsContainer.innerHTML = Array.from({length: dotsCount}, (_, i) => 
-                `<div class="dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>`
-            ).join('');
-        }
-
-        function moveSlider(dir) {
-            const track = document.getElementById('promosTrack');
-            const cards = track.children;
-            const maxIndex = Math.ceil(cards.length / 3) - 1;
-
-            sliderIndex += dir;
-            if (sliderIndex < 0) sliderIndex = maxIndex;
-            if (sliderIndex > maxIndex) sliderIndex = 0;
-
-            updateSlider();
-        }
-
-        function goToSlide(index) {
-            sliderIndex = index;
-            updateSlider();
-        }
-
-        function updateSlider() {
-            const track = document.getElementById('promosTrack');
-            const cardWidth = track.children[0]?.offsetWidth + 24 || 0;
-            track.style.transform = `translateX(-${sliderIndex * cardWidth * 3}px)`;
-
-            document.querySelectorAll('.dot').forEach((d, i) => {
-                d.classList.toggle('active', i === sliderIndex);
-            });
-        }
-
-        // FAQ
-        function toggleFaq(el) {
-            const item = el.parentElement;
-            const wasActive = item.classList.contains('active');
-            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
-            if (!wasActive) item.classList.add('active');
-        }
-
-        // Modal
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function closeModalOnOverlay(e, id) {
-            if (e.target === document.getElementById(id)) closeModal(id);
-        }
-
-        function switchModal(from, to) {
-            closeModal(from);
-            setTimeout(() => openModal(to), 200);
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            showToast('¡Bienvenido de vuelta!');
-            closeModal('loginModal');
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            showToast('¡Cuenta creada exitosamente!');
-            closeModal('registerModal');
-        }
-
-        // Search
-        function handleSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            if (!query) return;
-
-            const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
-            const grid = document.getElementById('productsGrid');
-
-            if (filtered.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray);"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 12px;"></i><p>No encontramos productos con "' + query + '"</p></div>';
-            } else {
-                grid.innerHTML = filtered.map(p => `
-                    <div class="product-card fade-in visible">
-                        <div style="position: relative; overflow: hidden;">
-                            <img src="${p.img}" alt="${p.name}" class="product-image" loading="lazy">
-                        </div>
-                        <div class="product-info">
-                            <h4>${p.name}</h4>
-                            <p class="product-desc">${p.desc}</p>
-                            <div class="product-meta">
-                                <span class="product-price">$${p.price.toFixed(2)}</span>
-                                <button class="btn-add" onclick="addToCart('${p.name}', ${p.price}, '${p.img}')">
-                                    <i class="fas fa-plus"></i> Añadir
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') handleSearch();
-        });
-
-        // Toast
-        function showToast(message) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-            container.appendChild(toast);
-
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
-        }
-
-        // Scroll Animations
-        function initScrollAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-        }
-
-        // Header scroll
-        function initHeaderScroll() {
-            window.addEventListener('scroll', () => {
-                document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
-            });
-        }
-    </script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/orders.js"></script> 
