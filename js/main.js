@@ -4,6 +4,7 @@
         let cart = JSON.parse(localStorage.getItem('sushiCart')) || [];
         let currentCategory = 'all';
         let sliderIndex = 0;
+        const HOME_PRODUCT_LIMIT = 8;
 
         // Init: espera a Supabase antes de pintar el menú.
         document.addEventListener('DOMContentLoaded', async () => {
@@ -83,10 +84,21 @@
         }
 
         // Products
-        function renderProducts(filter = currentCategory, productsToRender = null) {
+        function renderProducts(filter = currentCategory, productsToRender = null, limit = HOME_PRODUCT_LIMIT) {
             const grid = document.getElementById('productsGrid');
             const source = productsToRender || products;
-            const filtered = filter === 'all' ? source : source.filter(p => p.category === filter);
+            const inScope = filter === 'all' ? source : source.filter(p => p.category === filter);
+
+            // En la home mostramos solo un extracto: destacados primero.
+            let filtered = inScope;
+            if (limit && inScope.length > limit) {
+                filtered = [
+                    ...inScope.filter(p => p.featured),
+                    ...inScope.filter(p => !p.featured)
+                ].slice(0, limit);
+            }
+
+            updateMenuMoreCTA(inScope.length, filtered.length);
 
             if (!filtered.length) {
                 grid.textContent = products.length
@@ -120,6 +132,27 @@
                     if (product) addToCart(product.name, product.price, product.img);
                 });
             });
+        }
+
+        // Muestra/actualiza el bloque "Ver menú completo" bajo la grilla de la home.
+        function updateMenuMoreCTA(totalInScope, shown) {
+            const wrap = document.getElementById('menuMoreWrap');
+            const label = document.getElementById('menuMoreCount');
+            if (!wrap) return;
+
+            if (!products.length) {
+                wrap.hidden = true;
+                return;
+            }
+
+            const remaining = Math.max(0, totalInScope - shown);
+            wrap.hidden = false;
+
+            if (label) {
+                label.textContent = remaining > 0
+                    ? `Mostrando ${shown} de ${totalInScope}. Hay ${remaining} producto${remaining === 1 ? '' : 's'} más esperándote.`
+                    : 'Explora todas nuestras categorías y productos.';
+            }
         }
 
         function filterCategory(cat, el) {
@@ -163,6 +196,7 @@
             const itemsContainer = document.getElementById('cartItems');
             const footer = document.getElementById('cartFooter');
             const totalEl = document.getElementById('cartTotal');
+            if (!badge || !itemsContainer) return;
 
             const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -178,25 +212,37 @@
                         <span style="font-size: 0.9rem;">¡Agrega algunos rolls deliciosos!</span>
                     </div>`;
                 footer.style.display = 'none';
-            } else {
-                itemsContainer.innerHTML = cart.map((item, i) => `
+                return;
+            }
+
+            itemsContainer.innerHTML = cart.map((item, i) => {
+                const safeName = escapeHTML(item.name);
+                const safeImg  = escapeHTML(item.img || '');
+                const lineTotal = Number(item.price) * Number(item.qty);
+
+                return `
                     <div class="cart-item">
-                        <img src="${item.img}" alt="${item.name}">
+                        ${safeImg
+                            ? `<img src="${safeImg}" alt="${safeName}" loading="lazy" referrerpolicy="no-referrer">`
+                            : `<div class="cart-item-placeholder" aria-hidden="true"><i class="fas fa-fish"></i></div>`}
                         <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <span class="price">$${(item.price * item.qty).toFixed(2)}</span>
+                            <h4>${safeName}</h4>
+                            <span class="price">$${lineTotal.toFixed(2)}</span>
                             <div class="qty-control" style="margin-top: 6px; display: inline-flex;">
-                                <button class="qty-btn" onclick="updateQty(${i}, -1)">-</button>
-                                <span class="qty-value">${item.qty}</span>
-                                <button class="qty-btn" onclick="updateQty(${i}, 1)">+</button>
+                                <button class="qty-btn" type="button" onclick="updateQty(${i}, -1)" aria-label="Quitar una unidad">-</button>
+                                <span class="qty-value">${Number(item.qty)}</span>
+                                <button class="qty-btn" type="button" onclick="updateQty(${i}, 1)" aria-label="Añadir una unidad">+</button>
                             </div>
                         </div>
-                        <button class="remove-item" onclick="removeFromCart(${i})"><i class="fas fa-trash"></i></button>
+                        <button class="remove-item" type="button" onclick="removeFromCart(${i})" aria-label="Eliminar del carrito">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
-                `).join('');
-                footer.style.display = 'block';
-                totalEl.textContent = '$' + totalPrice.toFixed(2);
-            }
+                `;
+            }).join('');
+
+            footer.style.display = 'block';
+            totalEl.textContent = '$' + totalPrice.toFixed(2);
         }
 
         function toggleCart() {

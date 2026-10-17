@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Completo | Sushi Poke Maracay</title>
+    <meta name="description" content="Explora el menú completo de Sushi Poke Maracay: rolls fríos, tempurizados, entradas, ensaladas, poke bowls, bebidas y postres. Ordena por WhatsApp.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+
+    <style>
+        /* ================= Página de Menú Completo ================= */
+        :root { --header-height: 74px; --header-offset: 0px; }
+
+        /* ---------- Hero compacto ---------- */
+        .menu-hero {
+            position: relative;
+            overflow: hidden;
+            padding: calc(var(--header-offset) + 44px) 20px 40px;
+            background: linear-gradient(135deg, #14161c 0%, #23262f 55%, #3a1c22 100%);
+            color: #fff;
+        }
+        .menu-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 85% 15%, rgba(230, 57, 70, .38), transparent 55%);
+            pointer-events: none;
+        }
+        .menu-hero-inner { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; }
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: .85rem;
+            color: rgba(255, 255, 255, .65);
+            margin-bottom: 16px;
+        }
+        .breadcrumb a { color: rgba(255, 255, 255, .85); text-decoration: none; transition: color .2s; }
+        .breadcrumb a:hover { color: #fff; }
+        .breadcrumb i.fa-chevron-right { font-size: .6rem; opacity: .5; }
+        .menu-hero h1 {
+            font-size: clamp(1.9rem, 4vw, 2.9rem);
+            line-height: 1.15;
+            margin: 0 0 12px;
+            font-weight: 800;
+        }
+        .menu-hero h1 span { color: var(--primary, #e63946); }
+        .menu-hero p { margin: 0; max-width: 620px; color: rgba(255, 255, 255, .78); font-size: .98rem; }
+
+        /* ---------- Barra sticky de búsqueda + categorías ---------- */
+        .menu-subnav {
+            position: sticky;
+            top: var(--header-height);
+            z-index: 900;
+            background: rgba(255, 255, 255, .95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, .08);
+            box-shadow: 0 8px 24px -18px rgba(0, 0, 0, .55);
+        }
+        .menu-subnav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .menu-search { position: relative; display: flex; align-items: center; }
+        .menu-search > i.fa-search {
+            position: absolute;
+            left: 18px;
+            color: #9aa0a6;
+            font-size: .95rem;
+            pointer-events: none;
+        }
+        .menu-search input {
+            width: 100%;
+            padding: 14px 48px 14px 46px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 0, 0, .12);
+            background: #fff;
+            font: inherit;
+            font-size: .95rem;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        /* Oculta el botón "X" nativo de los inputs type="search" (Chrome/Edge/Safari/IE) */
+        .menu-search input::-webkit-search-cancel-button,
+        .menu-search input::-webkit-search-decoration,
+        .menu-search input::-webkit-search-results-button,
+        .menu-search input::-webkit-search-results-decoration {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .menu-search input::-ms-clear,
+        .menu-search input::-ms-reveal {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+        .menu-search input:focus {
+            border-color: var(--primary, #e63946);
+            box-shadow: 0 0 0 4px rgba(230, 57, 70, .12);
+        }
+        .menu-search-clear {
+            position: absolute;
+            right: 8px;
+            width: 34px;
+            height: 34px;
+            font-size: .8rem;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, .06);
+            color: #555;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background .2s;
+        }
+        .menu-search-clear:hover { background: rgba(0, 0, 0, .12); }
+        .menu-search.has-value .menu-search-clear { display: flex; }
+
+        .category-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 2px 2px 6px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .category-chips::-webkit-scrollbar { display: none; }
+        .chip {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(0, 0, 0, .1);
+            background: #fff;
+            color: #3a3a3a;
+            font: inherit;
+            font-size: .87rem;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+        .chip:hover { border-color: var(--primary, #e63946); color: var(--primary, #e63946); }
+        .chip.active {
+            background: var(--primary, #e63946);
+            border-color: var(--primary, #e63946);
+            color: #fff;
+            box-shadow: 0 10px 20px -12px var(--primary, #e63946);
+        }
+        .chip-count {
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, .07);
+            opacity: .8;
+        }
+        .chip.active .chip-count { background: rgba(255, 255, 255, .28); opacity: 1; }
+
+        /* ---------- Toolbar de resultados ---------- */
+        .menu-body { max-width: 1280px; margin: 0 auto; padding: 34px 20px 70px; }
+        .menu-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .menu-toolbar p { margin: 0; color: #666; font-size: .92rem; }
+        .menu-toolbar p strong { color: #1c1c1c; }
+        .menu-sort { display: flex; align-items: center; gap: 8px; font-size: .87rem; color: #666; }
+        .menu-sort select {
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, .12);
+            background: #fff;
+            font: inherit;
+            font-size: .87rem;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+        }
+        .menu-sort select:focus { border-color: var(--primary, #e63946); }
+
+        /* ---------- Placeholder de imagen ---------- */
+        .product-media { position: relative; overflow: hidden; }
+        .product-image--placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            background: linear-gradient(135deg, #f7f7f7, #ebebeb);
+            color: #cfcfcf;
+            font-size: 2.4rem;
+        }
+
+        /* ---------- Estado vacío ---------- */
+        .menu-empty { text-align: center; padding: 70px 20px; color: #777; }
+        .menu-empty[hidden] { display: none; }
+        .menu-empty > i { font-size: 3rem; color: var(--primary, #e63946); opacity: .3; margin-bottom: 18px; }
+        .menu-empty h3 { margin: 0 0 8px; color: #2a2a2a; font-size: 1.25rem; }
+        .menu-empty p { margin: 0 0 22px; }
+
+        /* ---------- Cargar más ---------- */
+        .load-more-wrap { text-align: center; margin-top: 40px; }
+        .load-more-wrap[hidden] { display: none; }
+
+        @media (max-width: 640px) {
+            .menu-hero { padding-top: calc(var(--header-offset) + 28px); padding-bottom: 30px; }
+            .menu-body { padding: 26px 16px 60px; }
+            .menu-subnav-inner { padding: 10px 14px; }
+            .menu-toolbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header (idéntico al de la home, con enlaces absolutos) -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <picture>
+                        <source srcset="favicon_io/apple-touch-icon.svg" type="image/svg+xml" />
+                        <img style="height: 49px; width: 49px; text-align: center; border-radius: 100%; margin-top: 12px;" src="favicon_io/apple-touch-icon.svg" alt="SushiPoke" />
+                    </picture>
+                </div>
+                <div class="logo-text">Sushi <span>Poke</span></div>
+            </a>
+            <div class="search-bar">
+                <input type="text" placeholder="¿Qué te gustaría comer hoy?" id="headerSearchInput">
+                <button type="button" onclick="goToMenuSearch()"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-icons">
+                <a href="index.html" class="nav-icon" title="Inicio"><i class="fas fa-home"></i></a>
+                <a href="menu.html" class="nav-icon active" title="Menú completo"><i class="fas fa-utensils"></i></a>
+                <button class="nav-icon" type="button" onclick="openModal('loginModal')" title="Mi Cuenta"><i class="fas fa-user"></i></button>
+                <button class="nav-icon" type="button" onclick="toggleCart()" title="Carrito">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="menu-hero">
+        <div class="menu-hero-inner">
+            <nav class="breadcrumb" aria-label="Ruta de navegación">
+                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Menú completo</span>
+            </nav>
+            <h1>Nuestro Menú <span>Completo</span></h1>
+            <p>Rolls fríos, tempurizados, entradas, ensaladas, poke bowls, bebidas y postres. Todo preparado al momento con ingredientes frescos.</p>
+        </div>
+    </section>
+
+    <!-- Barra sticky: búsqueda + categorías -->
+    <div class="menu-subnav">
+        <div class="menu-subnav-inner">
+            <div class="menu-search" id="menuSearchWrap">
+                <i class="fas fa-search"></i>
+                <input type="search" id="menuSearchInput" placeholder="Buscar rolls, poke bowls, bebidas…" autocomplete="off" aria-label="Buscar en el menú">
+                <button class="menu-search-clear" id="menuSearchClear" type="button" aria-label="Limpiar búsqueda">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="category-chips" id="categoryChips" role="tablist" aria-label="Categorías del menú"></div>
+        </div>
+    </div>
+
+    <!-- Contenido -->
+    <main class="menu-body">
+        <div class="menu-toolbar">
+            <p id="resultsCount">Cargando menú…</p>
+            <div class="menu-sort">
+                <label for="sortSelect"><i class="fas fa-arrow-down-wide-short"></i> Ordenar:</label>
+                <select id="sortSelect">
+                    <option value="default">Recomendados</option>
+                    <option value="price-asc">Precio: menor a mayor</option>
+                    <option value="price-desc">Precio: mayor a menor</option>
+                    <option value="name-asc">Nombre: A – Z</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+
+        <div class="menu-empty" id="menuEmpty" hidden>
+            <i class="fas fa-magnifying-glass"></i>
+            <h3>No encontramos resultados</h3>
+            <p id="menuEmptyText">Prueba con otra palabra o revisa otra categoría.</p>
+            <button class="btn btn-outline" type="button" onclick="clearFilters()">
+                <i class="fas fa-rotate-left"></i> Limpiar filtros
+            </button>
+        </div>
+
+        <div class="load-more-wrap" id="loadMoreWrap" hidden>
+            <button class="btn btn-outline" type="button" id="loadMoreBtn">
+                <i class="fas fa-chevron-down"></i> Cargar más productos
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer compacto -->
+    <footer class="footer">
+        <div class="footer-bottom" style="border-top:0;padding-top:0;">
+            <p>Sushi Poke 2025 &copy; Todos los derechos reservados. Diseñado con ❤️ en Maracay, Venezuela.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Tu Pedido</h3>
+            <button class="close-cart" type="button" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+                <span style="font-size: 0.9rem;">¡Agrega algunos rolls deliciosos!</span>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="btn btn-whatsapp" type="button" onclick="checkoutWithDB()">
+                <i class="fab fa-whatsapp"></i> Completar pedido por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal" onclick="closeModalOnOverlay(event, 'loginModal')">
+        <div class="modal">
+            <button class="close-modal" type="button" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">Accede a tu cuenta para pedidos más rápidos</p>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <div>
+                    <p style="text-align:right;margin:-8px 0 6px">
+                        <a href="#" style="color:var(--primary);font-size:.85rem;font-weight:600;text-decoration:none"
+                           onclick="closeModal('loginModal');openModal('recoveryModal');return false;">
+                           ¿Olvidaste tu contraseña?</a>
+                    </p>
+                </div>
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+            </form>
+            <div class="modal-footer">
+                ¿No tienes cuenta? <a href="#" onclick="switchModal('loginModal', 'registerModal'); return false;">Regístrate</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal" onclick="closeModalOnOverlay(event, 'registerModal')">
+        <div class="modal">
+            <button class="close-modal" type="button" onclick="closeModal('registerModal')"><i class="fas fa-times"></i></button>
+            <h2>Crear Cuenta</h2>
+            <p class="subtitle">Únete y recibe promociones exclusivas</p>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" placeholder="Juan Pérez" required>
+                </div>
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" placeholder="tu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" placeholder="+58 424-0000000" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrarme</button>
+            </form>
+            <div class="modal-footer">
+                ¿Ya tienes cuenta? <a href="#" onclick="switchModal('registerModal', 'loginModal'); return false;">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recuperar contraseña -->
+    <div class="modal-overlay" id="recoveryModal" onclick="closeModalOnOverlay(event,'recoveryModal')">
+        <div class="modal">
+            <button class="close-modal" type="button" onclick="closeModal('recoveryModal')"><i class="fas fa-times"></i></button>
+            <h2>Recuperar contraseña</h2>
+            <p class="subtitle">Te enviaremos un enlace a tu correo</p>
+            <form onsubmit="handleRecoveryRequest(event)">
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" placeholder="tu@email.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar enlace</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts (orden correcto: sb → auth → orders → menu) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/menu.js"></script>
+</body>
+</html>

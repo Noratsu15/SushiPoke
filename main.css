@@ -31,7 +31,7 @@ body {
 .header {
     position: fixed;
     top: 0; left: 0; right: 0;
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    background: linear-gradient(0deg, var(--secondary) 0%, #2d1f1f 50%, var(--primary-dark) 100%);
     padding: 14px 0;
     z-index: 1000;
     box-shadow: 0 4px 20px rgba(196, 30, 58, 0.3);
@@ -652,7 +652,6 @@ body {
     border-radius: var(--radius);
     padding: 40px;
     text-align: center;
-    position: sticky;
     top: 100px;
 }
 .faq-register .logo-icon {
@@ -972,7 +971,7 @@ body {
     .hero-container { grid-template-columns: 1fr; text-align: center; margin-bottom: 10px; }
     .hero-content p { margin: 0 auto 32px; }
     .hero-buttons { justify-content: center; }
-    .hero-image { order: -1; max-width: 500px; margin: 0 auto; }
+    .hero-image { order: -1; max-width: 500px; margin: 100px auto; }
     .menu-layout { grid-template-columns: 1fr; }
     .sidebar { position: static; }
     .promo-card { min-width: calc(50% - 12px); }
@@ -1009,4 +1008,74 @@ body {
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 0.85rem; font-weight: 800;
+}
+
+/* ============================================================
+   CTA "Ver menú completo" + layout del menú en la home
+   ============================================================ */
+
+.menu-main { min-width: 0; }
+
+/* Enlace dentro del sidebar */
+.sidebar-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: var(--primary, #e63946);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.sidebar-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -14px var(--primary, #e63946);
+    filter: brightness(1.05);
+}
+
+/* Bloque CTA bajo la grilla */
+.menu-more {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 36px;
+    padding: 32px 24px;
+    text-align: center;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, .07), rgba(230, 57, 70, .015));
+    border: 1px dashed rgba(230, 57, 70, .35);
+}
+.menu-more[hidden] { display: none; }
+.menu-more p {
+    margin: 0;
+    max-width: 540px;
+    color: #555;
+    font-size: .95rem;
+    line-height: 1.5;
+}
+.menu-more p i { color: var(--primary, #e63946); margin-right: 6px; }
+.menu-more .btn { padding: 14px 30px; font-size: 1rem; }
+.menu-more .btn i { margin-left: 8px; transition: transform .2s ease; }
+.menu-more .btn:hover i { transform: translateX(4px); }
+
+@media (max-width: 900px) {
+    .sidebar-cta { display: none; } /* en móvil el sidebar se colapsa; el CTA principal queda abajo */
+}
+.cart-item-placeholder {
+    width: 60px;
+    height: 60px;
+    flex: 0 0 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f2f2;
+    border-radius: 10px;
+    color: #c9c9c9;
+    font-size: 1.2rem;
 }

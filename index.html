@@ -155,9 +155,28 @@
                     <li onclick="filterCategory('poke', this)"><i class="fas fa-bowl-rice"></i> Poke Bowls</li>
                     <li onclick="filterCategory('bebidas', this)"><i class="fas fa-wine-glass"></i> Bebidas</li>
                 </ul>
+
+                <a href="menu.html" class="sidebar-cta">
+                    <i class="fas fa-book-open"></i>
+                    <span>Ver menú completo</span>
+                </a>
             </aside>
-            <div class="products-grid" id="productsGrid">
-                <!-- Products injected via JS -->
+
+            <div class="menu-main">
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products injected via JS -->
+                </div>
+
+                <!-- CTA: Ver menú completo -->
+                <div class="menu-more" id="menuMoreWrap" hidden>
+                    <p>
+                        <i class="fas fa-utensils"></i>
+                        <span id="menuMoreCount">Explora todas nuestras categorías y productos.</span>
+                    </p>
+                    <a href="menu.html" class="btn btn-primary">
+                        Ver menú completo <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
