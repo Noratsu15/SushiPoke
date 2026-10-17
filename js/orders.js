@@ -5,7 +5,17 @@
      WhatsApp con el número de pedido incluido.
    - Si no tiene sesión: mantiene el flujo actual de WhatsApp directo.
    ============================================================================ */
-
+  function checkout() {
+    if (cart.length === 0) return;
+    let msg = "¡Hola Sushi Poke! Quiero hacer un pedido:%0A%0A";
+    let total = 0;
+    cart.forEach(item => {
+        msg += `• ${item.name} x${item.qty} - $${(item.price * item.qty).toFixed(2)}%0A`;
+        total += item.price * item.qty;
+    });
+    msg += `%0ATotal: $${total.toFixed(2)}%0A%0AGracias!`;
+    window.open(`https://wa.me/584243678252?text=${msg}`, '_blank');
+  }
    async function checkoutWithDB() {
     const cart = JSON.parse(localStorage.getItem('sushiCart')) || [];
     if (!cart.length) return;
