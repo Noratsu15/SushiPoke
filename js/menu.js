@@ -65,6 +65,43 @@ function toggleSearchClear() {
     wrap.classList.toggle('has-value', Boolean(input.value.trim()));
 }
 
+// Formateador de teléfono venezolano
+function initPhoneMask() {
+    const phoneInputs = document.querySelectorAll('input[type="tel"]');
+    
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            // 1. Quitar todo lo que no sean números
+            let val = e.target.value.replace(/\D/g, '');
+            
+            // 2. Si el usuario pega el +58, lo quitamos para no duplicar
+            if (val.startsWith('58')) val = val.substring(2);
+            
+            // 3. Limitar a 10 dígitos (3 de operadora + 7 de número)
+            if (val.length > 10) val = val.substring(0, 10);
+            
+            // 4. Formatear como +58 XXX-XXXXXXX
+            let formatted = '+58 ';
+            if (val.length > 3) {
+                formatted += val.substring(0, 3) + '-' + val.substring(3);
+            } else {
+                formatted += val;
+            }
+            
+            e.target.value = formatted;
+        });
+
+        // Validación extra al enviar el formulario (en tu handleRegister)
+        input.addEventListener('blur', () => {
+            if (input.value === '+58 ' || input.value.length < 13) {
+                input.setCustomValidity('Por favor, ingresa un número válido de 10 dígitos.');
+            } else {
+                input.setCustomValidity('');
+            }
+        });
+    });
+}
+
 /* ------------------------------ Arranque ------------------------------ */
 document.addEventListener('DOMContentLoaded', async () => {
     syncHeaderOffset();
@@ -72,6 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     bindUI();
     readStateFromURL();
     updateCartUI();
+    initPhoneMask();
 
     await loadProducts();
 

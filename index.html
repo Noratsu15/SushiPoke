@@ -449,18 +449,55 @@
     <!-- Modal de Recuperación de Contraseña -->
     <div class="modal-overlay" id="recoveryModal" onclick="closeModalOnOverlay(event,'recoveryModal')">
         <div class="modal">
-          <button class="close-modal" onclick="closeModal('recoveryModal')"><i class="fas fa-times"></i></button>
-          <h2>Recuperar contraseña</h2>
-          <p class="subtitle">Te enviaremos un enlace a tu correo</p>
-          <form onsubmit="handleRecoveryRequest(event)">
-            <div class="form-group">
-              <label>Correo electrónico</label>
-              <input type="email" placeholder="tu@email.com" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Enviar enlace</button>
-          </form>
+            <button class="close-modal" onclick="closeModal('recoveryModal')"><i class="fas fa-times"></i></button>
+            <h2>Recuperar contraseña</h2>
+            <p class="subtitle">Te enviaremos un enlace a tu correo</p>
+            <form onsubmit="handleRecoveryRequest(event)">
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" placeholder="tu@email.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar enlace</button>
+            </form>
         </div>
-      </div>
+    </div>
+
+    <!-- Modal Perfil de Usuario -->
+    <div class="modal-overlay" id="profileModal" onclick="closeModalOnOverlay(event, 'profileModal')">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal('profileModal')"><i class="fas fa-times"></i></button>
+            <h2>Mi Perfil</h2>
+            <p class="subtitle">Actualiza tus datos y foto de perfil</p>
+    
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img id="profileAvatarPreview" src="https://via.placeholder.com/100"
+                    style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary);">
+                <br><br>
+                <label for="avatarUpload" class="btn btn-outline"
+                    style="padding: 8px 16px; font-size: 0.9rem; cursor: pointer;">
+                    <i class="fas fa-camera"></i> Cambiar foto
+                </label>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
+            </div>
+    
+            <form onsubmit="handleUpdateProfile(event)">
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" id="profileName" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" id="profilePhone" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </form>
+    
+            <div class="modal-footer" style="margin-top: 20px;">
+                <a href="#" onclick="handleLogout(); return false;" style="color: #e63946; font-weight: bold;">Cerrar
+                    Sesión</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
@@ -468,8 +505,8 @@
     <script src="js/main.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supabase-config.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/orders.js"></script> 
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/orders.js"></script> 
 </body>
 </html>

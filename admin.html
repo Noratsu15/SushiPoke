@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin | Sushi Poke</title>
+    <link rel="stylesheet" href="main.css">
+    <style>
+        .admin-container { max-width: 1200px; margin: 100px auto; padding: 20px; }
+        .order-card { background: #fff; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: #fff; }
+        .status-pending { background: #f39c12; }
+        .status-completed { background: #27ae60; }
+        .status-cancelled { background: #e74c3c; }
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Panel de Administración</h1>
+        <div class="filter-bar">
+            <button class="btn btn-primary" onclick="loadOrders('today')">Hoy</button>
+            <button class="btn btn-outline" onclick="loadOrders('week')">Esta Semana</button>
+            <button class="btn btn-outline" onclick="loadOrders('month')">Este Mes</button>
+        </div>
+        <div id="ordersList"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script>
+        // 1. Verificar que sea ADMIN
+        async function checkAdmin() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) { window.location.href = 'index.html'; return; }
+            
+            const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
+            if (profile?.role !== 'admin' && profile?.role !== 'staff') {
+                alert('No tienes permisos de administrador');
+                window.location.href = 'index.html';
+            }
+        }
+        checkAdmin();
+
+        // 2. Cargar Pedidos (Filtrado por fecha)
+        async function loadOrders(range) {
+            const now = new Date();
+            let startDate = new Date();
+
+            if (range === 'today') startDate.setHours(0,0,0,0);
+            if (range === 'week') startDate.setDate(now.getDate() - 7);
+            if (range === 'month') startDate.setMonth(now.getMonth() - 1);
+
+            const list = document.getElementById('ordersList');
+            list.innerHTML = '<p>Cargando pedidos...</p>';
+
+            // Traemos pedidos con sus items y el nombre del cliente
+            const { data: orders, error } = await sb
+                .from('orders')
+                .select(`*, order_items(*), profiles(full_name)`)
+                .gte('created_at', startDate.toISOString())
+                .order('created_at', { ascending: false });
+
+            if (error || !orders.length) {
+                list.innerHTML = '<p>No hay pedidos en este rango de fechas.</p>';
+                return;
+            }
+
+            // Renderizar
+            list.innerHTML = orders.map(order => {
+                const date = new Date(order.created_at).toLocaleString('es-VE');
+                const statusClass = `status-${order.status}`;
+                const items = order.order_items.map(i => `${i.quantity}x ${i.product_name}`).join(', ');
+
+                return `
+                    <div class="order-card">
+                        <div style="display:flex; justify-content:space-between;">
+                            <h3>Pedido #${order.id.slice(0,6)} - $${order.total}</h3>
+                            <span class="status-badge ${statusClass}">${order.status.toUpperCase()}</span>
+                        </div>
+                        <p><strong>Cliente:</strong> ${order.profiles?.full_name || 'Invitado'}</p>
+                        <p><strong>Fecha:</strong> ${date}</p>
+                        <p><strong>Items:</strong> ${items}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Cargar por defecto
+        loadOrders('today');
+    </script>
+</body>
+</html>

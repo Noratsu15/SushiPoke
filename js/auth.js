@@ -294,3 +294,77 @@
        openModal('loginModal');
      }
    });
+
+  // 1. Actualizar el botón del header para que abra el perfil si hay sesión
+  async function refreshAuthUI() {
+    const { data: { session } } = await sb.auth.getSession();
+    const userBtn = document.querySelector('[title="Mi Cuenta"]');
+    if (!session?.user) {
+        userBtn.innerHTML = '<i class="fas fa-user"></i>';
+        userBtn.onclick = () => openModal('loginModal');
+        return;
+    }
+    
+    // Usuario logueado
+    userBtn.innerHTML = '<i class="fas fa-user-check"></i>';
+    userBtn.onclick = () => openProfileModal();
+  }
+
+  // 2. Abrir modal con datos
+  async function openProfileModal() {
+    const { data: { user } } = await sb.auth.getUser();
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+    
+    document.getElementById('profileName').value = profile?.full_name || '';
+    document.getElementById('profilePhone').value = profile?.phone || '';
+    if (profile?.avatar_url) {
+        document.getElementById('profileAvatarPreview').src = profile.avatar_url;
+    }
+    openModal('profileModal');
+  }
+
+  // 3. Subir Avatar a Supabase Storage
+  async function uploadAvatar(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const { data: { user } } = await sb.auth.getUser();
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${user.id}/avatar.${fileExt}`; // Carpeta con el ID del usuario
+
+    // Subir archivo (upsert: true permite sobreescribir si ya existe)
+    const { error: uploadError } = await sb.storage.from('avatars').upload(filePath, file, { upsert: true });
+    if (uploadError) return showToast('Error al subir imagen');
+
+    // Obtener URL pública
+    const { data: { publicUrl } } = sb.storage.from('avatars').getPublicUrl(filePath);
+    
+    // Guardar en perfil
+    await sb.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id);
+    
+    document.getElementById('profileAvatarPreview').src = publicUrl;
+    showToast('Foto actualizada');
+  }
+
+  // 4. Guardar cambios de texto
+  async function handleUpdateProfile(event) {
+    event.preventDefault();
+    const { data: { user } } = await sb.auth.getUser();
+    
+    const { error } = await sb.from('profiles').update({
+        full_name: document.getElementById('profileName').value,
+        phone: document.getElementById('profilePhone').value
+    }).eq('id', user.id);
+
+    if (error) return showToast('Error al guardar');
+    showToast('Perfil actualizado');
+    closeModal('profileModal');
+  }
+
+  // 5. Cerrar Sesión
+  async function handleLogout() {
+    await sb.auth.signOut();
+    closeModal('profileModal');
+    showToast('Sesión cerrada');
+    refreshAuthUI();
+  }
