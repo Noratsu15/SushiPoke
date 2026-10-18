@@ -50,7 +50,7 @@
             <div class="nav-icons">
                 <a href="#hero" class="nav-icon" title="Inicio"><i class="fas fa-home"></i></a>
                 <a href="menu.html" class="nav-icon" title="Menú"><i class="fas fa-utensils"></i></a>
-                <button class="nav-icon" onclick="openModal('loginModal')" title="Mi Cuenta"><i class="fas fa-user"></i></button>
+                <button class="nav-icon" id="userNavBtn" title="Mi Cuenta"><i class="fas fa-user"></i></button>
                 <button class="nav-icon" onclick="toggleCart()" title="Carrito">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" id="cartBadge">0</span>
@@ -356,7 +356,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>Sushi Poke 2025 &copy; Todos los derechos reservados. Diseñado con ❤️ en Maracay, Venezuela.</p>
+            <p>Sushi Poke 2019 &copy; Todos los derechos reservados. Diseñado con ❤️ en Maracay, Venezuela.</p>
         </div>
     </footer>
 
@@ -394,11 +394,18 @@
             <form onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>Correo electrónico</label>
-                    <input type="email" placeholder="tu@email.com" required>
+                    <input type="email" placeholder="tu@email.com" autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label>Contraseña</label>
-                    <input type="password" placeholder="••••••••" required>
+                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+                    <button type="button" class="btn-toggle-password" id="togglePassword" aria-label="Mostrar contraseña">
+                        <!-- Icono Ojo (Oculto / Mostrar) -->
+                        <svg id="eyeIcon" viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
                 </div>
                 <div>
                     <p style="text-align:right;margin:-8px 0 6px">
@@ -493,8 +500,10 @@
             </form>
     
             <div class="modal-footer" style="margin-top: 20px;">
-                <a href="#" onclick="handleLogout(); return false;" style="color: #e63946; font-weight: bold;">Cerrar
-                    Sesión</a>
+                <button type="button" onclick="handleLogout(event)"
+                    style="background: none; border: none; color: #e63946; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 1rem;">
+                    Cerrar Sesión
+                </button>
             </div>
         </div>
     </div>

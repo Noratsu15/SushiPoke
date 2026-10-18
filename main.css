@@ -940,6 +940,35 @@ body {
 }
 .close-modal:hover { background: var(--primary); color: white; }
 
+.btn-toggle-password {
+    position: absolute;
+    right: 50px;
+    top: 275px;
+    background: none;
+    border: none;
+    color: #a1a1a6;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.btn-toggle-password:hover {
+    color: #c9a24b;
+}
+
+.btn-toggle-password svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 /* Toast */
 .toast-container {
     position: fixed;

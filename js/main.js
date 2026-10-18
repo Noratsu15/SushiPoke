@@ -12,6 +12,7 @@
             initSliderDots();
             initScrollAnimations();
             initHeaderScroll();
+            initPhoneMask();
             await loadProducts();
             renderProducts();
             syncCartPrices();
@@ -410,7 +411,36 @@
         }
 
         // Llamar a la función cuando cargue el DOM
-        document.addEventListener('DOMContentLoaded', initPhoneMask);
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+    
+            // SVG Icono Ojo Táchado (Para cuando la contraseña es visible)
+            const eyeOffPath = `
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+            `;
+    
+            // SVG Icono Ojo Normal (Para cuando la contraseña está oculta)
+            const eyeOnPath = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            `;
+    
+            toggleBtn.addEventListener('click', function () {
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+                
+                // Cambiar el tipo de input
+                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                
+                // Cambiar el ícono
+                eyeIcon.innerHTML = isPassword ? eyeOffPath : eyeOnPath;
+                
+                // Actualizar accesibilidad
+                this.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+            });
+        });
 
         // Toast
         function showToast(message) {

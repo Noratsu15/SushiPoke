@@ -1,9 +1,5 @@
 /* ============================================================================
-   SUSHI POKE — Módulo de autenticación
-   - Login / registro con Supabase Auth
-   - Prevención de inicio de sesión duplicado (una sola sesión activa)
-   - Recuperación y restablecimiento de contraseña
-   - Es drop-in: sobrescribe handleLogin / handleRegister del index.html
+   SUSHI POKE — Módulo de autenticación, perfil y sesión
    ============================================================================ */
 
    const SP_TOKEN_KEY = 'sp_session_token';
@@ -14,7 +10,6 @@
    
    function spToast(message) {
      if (typeof showToast === 'function') { showToast(message); return; }
-     // Fallback para páginas standalone (recuperar/restablecer)
      let el = document.createElement('div');
      el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
        'background:#1a1a1a;color:#fff;padding:14px 24px;border-radius:10px;' +
@@ -27,13 +22,12 @@
    function spFriendlyError(error) {
      const msg = (error && (error.message || error.error_description)) || 'Error inesperado';
      if (msg.includes('Invalid login credentials')) return 'Correo o contraseña incorrectos.';
-     if (msg.includes('Email not confirmed'))     return 'Debes confirmar tu correo antes de entrar (revisa tu bandeja).';
+     if (msg.includes('Email not confirmed'))     return 'Debes confirmar tu correo antes de entrar.';
      if (msg.includes('already registered') || msg.includes('already been registered'))
        return 'Este correo ya está registrado. Inicia sesión o recupera tu clave.';
      if (msg.includes('Password should be at least')) return 'La contraseña debe tener al menos 6 caracteres.';
      if (msg.includes('duplicate key') && msg.includes('profiles_phone'))
        return 'Este teléfono ya está registrado en otra cuenta.';
-     if (msg.includes('session') && msg.includes('closed')) return 'Tu sesión fue cerrada desde otro dispositivo.';
      return msg;
    }
    
@@ -55,28 +49,46 @@
    
    async function spValidateSession() {
      const { data: { session } } = await sb.auth.getSession();
-     if (!session) { spCurrentUser = null; spRenderAuthState(); return; }
+     if (!session) { spCurrentUser = null; refreshAuthUI(); return; }
    
      const token = localStorage.getItem(SP_TOKEN_KEY);
      if (!token) { await spForceLogout(false); return; }
    
      const { data: valid } = await sb.rpc('validate_session', { p_token: token });
      if (!valid) {
-       await spForceLogout(true); // otro dispositivo inició sesión
+       await spForceLogout(true);
      }
    }
    
    async function spForceLogout(notify) {
-     const token = localStorage.getItem(SP_TOKEN_KEY);
-     if (token) await sb.rpc('close_session', { p_token: token }).catch(() => {});
-     await sb.auth.signOut().catch(() => {});
-     localStorage.removeItem(SP_TOKEN_KEY);
-     spCurrentUser = null;
-     spRenderAuthState();
-     if (notify) {
-       spToast('Sesión cerrada: se inició sesión desde otro dispositivo.');
-     }
-   }
+    const token = localStorage.getItem(SP_TOKEN_KEY);
+    
+    // 1. Intentar cerrar la sesión en la base de datos (RPC)
+    try {
+      if (token) {
+        await sb.rpc('close_session', { p_token: token });
+      }
+    } catch (error) {
+      // Si falla el RPC (porque no hay sesión en DB o error de red), lo ignoramos silenciosamente
+      console.warn('Nota: No se pudo cerrar la sesión remota (puede que ya estuviera cerrada).');
+    }
+  
+    // 2. Cerrar la sesión local de Supabase Auth
+    try {
+      await sb.auth.signOut();
+    } catch (error) {
+      console.warn('Nota: Error al hacer signOut local.');
+    }
+  
+    // 3. Limpieza local y actualización de la UI
+    localStorage.removeItem(SP_TOKEN_KEY);
+    spCurrentUser = null;
+    refreshAuthUI();
+  
+    if (notify) {
+      spToast('Sesión cerrada: se inició sesión desde otro dispositivo.');
+    }
+  }
    
    /* ------------------------------- Registro -------------------------------- */
    
@@ -89,8 +101,8 @@
      const phone    = phoneInput.value.trim();
      const password = pwdInput.value;
    
-     if (fullName.length < 2)            { spToast('Ingresa tu nombre completo.'); return; }
-     if (!spValidPassword(password))     { spToast('La contraseña debe tener mínimo 8 caracteres, letras y números.'); return; }
+     if (fullName.length < 2)        { spToast('Ingresa tu nombre completo.'); return; }
+     if (!spValidPassword(password)) { spToast('La contraseña debe tener mínimo 8 caracteres, letras y números.'); return; }
    
      const btn = e.target.querySelector('button[type="submit"]');
      if (btn) { btn.disabled = true; btn.textContent = 'Creando cuenta...'; }
@@ -107,7 +119,8 @@
      if (data.session) {
        await spRegisterSession();
        spCurrentUser = data.user;
-       spRenderAuthState();
+       await spLoadProfile();
+       refreshAuthUI();
        spToast('¡Cuenta creada exitosamente! Bienvenido 🍣');
        if (typeof closeModal === 'function') closeModal('registerModal');
      } else {
@@ -133,8 +146,6 @@
    
      if (error) { spToast(spFriendlyError(error)); return; }
    
-     // ⚠️ Punto clave anti duplicado: cierra cualquier sesión previa
-     // del mismo usuario en otros dispositivos/navegadores.
      try {
        await spRegisterSession();
      } catch (err) {
@@ -145,19 +156,28 @@
    
      spCurrentUser = data.user;
      await spLoadProfile();
-     spRenderAuthState();
+     refreshAuthUI();
      spToast('¡Bienvenido de vuelta! 🍣');
      if (typeof closeModal === 'function') closeModal('loginModal');
    }
    
    /* ------------------------------- Logout ---------------------------------- */
    
-   async function handleLogout() {
-     await spForceLogout(false);
-     spToast('Sesión cerrada correctamente.');
-     const menu = document.getElementById('spAccountMenu');
-     if (menu) menu.remove();
-   }
+   async function handleLogout(e) {
+    // Si viene de un evento de clic, prevenimos que el enlace recargue o salte
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault(); 
+    }
+  
+    // Llamamos a la función que acabamos de arreglar
+    await spForceLogout(false);
+    
+    // Cerramos el modal y mostramos el mensaje
+    if (typeof closeModal === 'function') {
+      closeModal('profileModal');
+    }
+    spToast('Sesión cerrada correctamente.');
+  }
    
    /* --------------------- Recuperación de contraseña ------------------------ */
    
@@ -174,7 +194,6 @@
    
      if (btn) { btn.disabled = false; btn.textContent = 'Enviar enlace'; }
    
-     // Mensaje genérico a propósito: no revela si el correo existe (anti enumeración)
      if (error && error.message && !error.message.includes('rate limit')) {
        spToast(spFriendlyError(error));
        return;
@@ -196,14 +215,13 @@
      const { error } = await sb.auth.updateUser({ password: pwd });
      if (error) { spToast(spFriendlyError(error)); return; }
    
-     // La sesión de recuperación se cierra: el usuario debe entrar con su nueva clave
      await sb.auth.signOut().catch(() => {});
      localStorage.removeItem(SP_TOKEN_KEY);
      spToast('¡Contraseña actualizada! Inicia sesión con tu nueva clave.');
      setTimeout(() => { window.location.href = '/?login=1'; }, 1500);
    }
    
-   /* ------------------------- Estado de la cuenta --------------------------- */
+   /* ------------------------- Perfil de Usuario ----------------------------- */
    
    async function spLoadProfile() {
      if (!spCurrentUser) return;
@@ -211,56 +229,100 @@
      spCurrentUser.profile = data || null;
    }
    
-   function spRenderAuthState() {
-     const btn = document.querySelector('.nav-icons .nav-icon[title="Mi Cuenta"]');
-     if (!btn) return;
-   
-     if (spCurrentUser) {
-       const name = (spCurrentUser.profile && spCurrentUser.profile.full_name) ||
-                    spCurrentUser.email || 'Cuenta';
-       const initials = name.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
-       btn.innerHTML = '<span class="sp-avatar">' + initials + '</span>';
-       btn.title = 'Mi Cuenta (' + name + ')';
-       btn.onclick = spToggleAccountMenu;
+   async function openProfileModal() {
+     if (!spCurrentUser) return;
+     await spLoadProfile();
+     
+     const p = spCurrentUser.profile;
+     document.getElementById('profileName').value = p?.full_name || '';
+     document.getElementById('profilePhone').value = p?.phone || '';
+     
+     const imgPreview = document.getElementById('profileAvatarPreview');
+     if (p?.avatar_url) {
+       imgPreview.src = p.avatar_url;
      } else {
-       btn.innerHTML = '<i class="fas fa-user"></i>';
-       btn.title = 'Mi Cuenta';
-       btn.onclick = () => { if (typeof openModal === 'function') openModal('loginModal'); };
+       imgPreview.src = 'https://via.placeholder.com/100'; // Fallback
      }
+     
+     if (typeof openModal === 'function') openModal('profileModal');
    }
    
-   function spToggleAccountMenu() {
-     const existing = document.getElementById('spAccountMenu');
-     if (existing) { existing.remove(); return; }
+   async function uploadAvatar(event) {
+     const file = event.target.files[0];
+     if (!file) return;
+     
+     const { data: { user } } = await sb.auth.getUser();
+     const fileExt = file.name.split('.').pop();
+     const filePath = `${user.id}/avatar.${fileExt}`;
    
-     const name  = (spCurrentUser.profile && spCurrentUser.profile.full_name) || '';
-     const email = spCurrentUser.email || '';
+     const btn = document.querySelector('label[for="avatarUpload"]');
+     if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo...';
    
-     const menu = document.createElement('div');
-     menu.id = 'spAccountMenu';
-     menu.style.cssText =
-       'position:fixed;top:82px;right:24px;z-index:1500;background:#fff;border-radius:14px;' +
-       'box-shadow:0 15px 45px rgba(0,0,0,.18);padding:18px;width:250px;font-family:Poppins,sans-serif;' +
-       'border:1px solid #eee';
-     menu.innerHTML =
-       '<strong style="display:block;font-size:.95rem;margin-bottom:2px">' + name + '</strong>' +
-       '<span style="color:#6c757d;font-size:.8rem;word-break:break-all">' + email + '</span>' +
-       '<hr style="border:none;border-top:1px solid #eee;margin:12px 0">' +
-       '<button onclick="handleLogout()" style="width:100%;padding:10px;border:none;border-radius:8px;' +
-       'background:#c41e3a;color:#fff;font-family:Poppins;font-weight:600;cursor:pointer">' +
-       'Cerrar sesión</button>';
+     const { error: uploadError } = await sb.storage.from('avatars').upload(filePath, file, { upsert: true });
+     
+     if (uploadError) {
+       spToast('Error al subir imagen. Verifica tu conexión.');
+       if (btn) btn.innerHTML = '<i class="fas fa-camera"></i> Cambiar foto';
+       return;
+     }
    
-     document.body.appendChild(menu);
-     document.addEventListener('click', function closeOnOutside(ev) {
-       if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener('click', closeOnOutside); }
-     });
+     const { data: { publicUrl } } = sb.storage.from('avatars').getPublicUrl(filePath);
+     
+     // Añadimos un timestamp para forzar la recarga de la imagen en caché
+     const finalUrl = `${publicUrl}?t=${Date.now()}`;
+     
+     await sb.from('profiles').update({ avatar_url: finalUrl }).eq('id', user.id);
+     
+     document.getElementById('profileAvatarPreview').src = finalUrl;
+     if (btn) btn.innerHTML = '<i class="fas fa-camera"></i> Cambiar foto';
+     spToast('Foto actualizada correctamente');
+   }
+   
+   async function handleUpdateProfile(event) {
+     event.preventDefault();
+     const { data: { user } } = await sb.auth.getUser();
+     
+     const btn = event.target.querySelector('button[type="submit"]');
+     if (btn) { btn.disabled = true; btn.textContent = 'Guardando...'; }
+   
+     const { error } = await sb.from('profiles').update({
+         full_name: document.getElementById('profileName').value,
+         phone: document.getElementById('profilePhone').value
+     }).eq('id', user.id);
+   
+     if (btn) { btn.disabled = false; btn.textContent = 'Guardar Cambios'; }
+   
+     if (error) { spToast('Error al guardar los datos.'); return; }
+     
+     spToast('Perfil actualizado correctamente');
+     await spLoadProfile();
+     if (typeof closeModal === 'function') closeModal('profileModal');
+   }
+   
+   /* ------------------- UI: Estado del botón de usuario --------------------- */
+   
+   function refreshAuthUI() {
+     const userBtn = document.getElementById('userNavBtn');
+     if (!userBtn) return;
+   
+     if (spCurrentUser) {
+       // Usuario logueado: Icono de check + abre perfil
+       userBtn.innerHTML = '<i class="fas fa-user-check" style="color: var(--primary);"></i>';
+       userBtn.title = 'Mi Perfil';
+       userBtn.onclick = openProfileModal;
+     } else {
+       // Invitado: Icono normal + abre login
+       userBtn.innerHTML = '<i class="fas fa-user"></i>';
+       userBtn.title = 'Mi Cuenta';
+       userBtn.onclick = () => { if (typeof openModal === 'function') openModal('loginModal'); };
+     }
    }
    
    /* -------------------------------- Arranque ------------------------------- */
    
    document.addEventListener('DOMContentLoaded', async () => {
-     // Detecta la sesión de recuperación que viene en la URL (restablecer.html)
-     sb.auth.onAuthStateChange((event) => {
+     // 1. Manejar eventos de autenticación en tiempo real
+     sb.auth.onAuthStateChange((event, session) => {
        if (event === 'PASSWORD_RECOVERY') {
          spRecoveryMode = true;
          const form = document.getElementById('spResetForm');
@@ -270,101 +332,36 @@
            form.style.display = 'block';
          }
        }
-       if (event === 'SIGNED_IN' || event === 'USER_UPDATED') spCurrentUser = spCurrentUser;
-       if (event === 'SIGNED_OUT') { spCurrentUser = null; spRenderAuthState(); }
+       if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+         spCurrentUser = session.user;
+         refreshAuthUI();
+       }
+       if (event === 'SIGNED_OUT') {
+         spCurrentUser = null;
+         refreshAuthUI();
+       }
      });
    
+     // 2. Validar sesión al cargar la página
      const { data: { session } } = await sb.auth.getSession();
      if (session) {
        spCurrentUser = session.user;
-       await spValidateSession();   // expulsa si hay sesión nueva en otro dispositivo
+       await spValidateSession();
        if (spCurrentUser) await spLoadProfile();
      }
-     spRenderAuthState();
+     
+     // 3. Renderizar UI inicial
+     refreshAuthUI();
    
-     // Revalida la sesión periódicamente y al volver a la pestaña
+     // 4. Validaciones periódicas
      setInterval(spValidateSession, 5 * 60 * 1000);
      document.addEventListener('visibilitychange', () => {
        if (!document.hidden) spValidateSession();
      });
    
-     // ?login=1 abre el modal de login (usado tras restablecer la contraseña)
+     // 5. Lógica de redirección tras recuperar contraseña
      if (new URLSearchParams(location.search).get('login') === '1' &&
          typeof openModal === 'function') {
        openModal('loginModal');
      }
    });
-
-  // 1. Actualizar el botón del header para que abra el perfil si hay sesión
-  async function refreshAuthUI() {
-    const { data: { session } } = await sb.auth.getSession();
-    const userBtn = document.querySelector('[title="Mi Cuenta"]');
-    if (!session?.user) {
-        userBtn.innerHTML = '<i class="fas fa-user"></i>';
-        userBtn.onclick = () => openModal('loginModal');
-        return;
-    }
-    
-    // Usuario logueado
-    userBtn.innerHTML = '<i class="fas fa-user-check"></i>';
-    userBtn.onclick = () => openProfileModal();
-  }
-
-  // 2. Abrir modal con datos
-  async function openProfileModal() {
-    const { data: { user } } = await sb.auth.getUser();
-    const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
-    
-    document.getElementById('profileName').value = profile?.full_name || '';
-    document.getElementById('profilePhone').value = profile?.phone || '';
-    if (profile?.avatar_url) {
-        document.getElementById('profileAvatarPreview').src = profile.avatar_url;
-    }
-    openModal('profileModal');
-  }
-
-  // 3. Subir Avatar a Supabase Storage
-  async function uploadAvatar(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const { data: { user } } = await sb.auth.getUser();
-    const fileExt = file.name.split('.').pop();
-    const filePath = `${user.id}/avatar.${fileExt}`; // Carpeta con el ID del usuario
-
-    // Subir archivo (upsert: true permite sobreescribir si ya existe)
-    const { error: uploadError } = await sb.storage.from('avatars').upload(filePath, file, { upsert: true });
-    if (uploadError) return showToast('Error al subir imagen');
-
-    // Obtener URL pública
-    const { data: { publicUrl } } = sb.storage.from('avatars').getPublicUrl(filePath);
-    
-    // Guardar en perfil
-    await sb.from('profiles').update({ avatar_url: publicUrl }).eq('id', user.id);
-    
-    document.getElementById('profileAvatarPreview').src = publicUrl;
-    showToast('Foto actualizada');
-  }
-
-  // 4. Guardar cambios de texto
-  async function handleUpdateProfile(event) {
-    event.preventDefault();
-    const { data: { user } } = await sb.auth.getUser();
-    
-    const { error } = await sb.from('profiles').update({
-        full_name: document.getElementById('profileName').value,
-        phone: document.getElementById('profilePhone').value
-    }).eq('id', user.id);
-
-    if (error) return showToast('Error al guardar');
-    showToast('Perfil actualizado');
-    closeModal('profileModal');
-  }
-
-  // 5. Cerrar Sesión
-  async function handleLogout() {
-    await sb.auth.signOut();
-    closeModal('profileModal');
-    showToast('Sesión cerrada');
-    refreshAuthUI();
-  }
