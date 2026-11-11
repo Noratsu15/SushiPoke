@@ -11,6 +11,8 @@
     --shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
     --radius: 16px;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --header-height: 74px; 
+    --header-offset: 0px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1107,4 +1109,489 @@ body {
     border-radius: 10px;
     color: #c9c9c9;
     font-size: 1.2rem;
+}
+
+/* ============================================================
+   Bottom Navigation Bar (UX Mobile Optimization)
+   ============================================================ */
+   .bottom-nav {
+    display: none; /* Por defecto oculta en desktop */
+}
+
+@media (max-width: 768px) {
+    /* Ocultamos los iconos tradicionales del header en móvil */
+    .header-container .nav-icons {
+        display: none;
+    }
+
+    /* Mostramos y posicionamos la barra inferior fija */
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 65px;
+        background: rgba(26, 26, 26, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1500;
+        padding-bottom: env(safe-area-inset-bottom);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .bottom-nav-item {
+        background: none;
+        border: none;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        padding: 4px 0;
+    }
+
+    .bottom-icon-circle {
+        position: relative;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        color: var(--white);
+        margin-bottom: 2px;
+        transition: var(--transition);
+    }
+
+    .bottom-nav-item.active,
+    .bottom-nav-item:hover {
+        color: var(--gold);
+    }
+
+    .bottom-nav-item.active .bottom-icon-circle,
+    .bottom-nav-item:hover .bottom-icon-circle {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    /* Ajuste del badge en la barra inferior para mantener sincronía */
+    .bottom-nav .cart-badge {
+        top: -3px;
+        right: -3px;
+        width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+
+    /* Espaciado inferior en dispositivos móviles para que el contenido no quede oculto */
+    body {
+        padding-bottom: calc(75px + env(safe-area-inset-bottom));
+    }
+}
+
+/* ---------- Hero compacto ---------- */
+.menu-hero {
+    position: relative;
+    overflow: hidden;
+    padding: calc(var(--header-offset) + 44px) 20px 40px;
+    background: linear-gradient(135deg, #14161c 0%, #23262f 55%, #3a1c22 100%);
+    color: #fff;
+}
+.menu-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 85% 15%, rgba(230, 57, 70, .38), transparent 55%);
+    pointer-events: none;
+}
+.menu-hero-inner { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; }
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: .85rem;
+    color: rgba(255, 255, 255, .65);
+    margin-bottom: 16px;
+}
+.breadcrumb a { color: rgba(255, 255, 255, .85); text-decoration: none; transition: color .2s; }
+.breadcrumb a:hover { color: #fff; }
+.breadcrumb i.fa-chevron-right { font-size: .6rem; opacity: .5; }
+.menu-hero h1 {
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    line-height: 1.15;
+    margin: 0 0 12px;
+    font-weight: 800;
+}
+.menu-hero h1 span { color: var(--primary, #e63946); }
+.menu-hero p { margin: 0; max-width: 620px; color: rgba(255, 255, 255, .78); font-size: .98rem; }
+
+/* ---------- Barra sticky de búsqueda + categorías ---------- */
+.menu-subnav {
+    position: sticky;
+    top: var(--header-height);
+    z-index: 900;
+    background: rgba(255, 255, 255, .95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
+    box-shadow: 0 8px 24px -18px rgba(0, 0, 0, .55);
+}
+.menu-subnav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.menu-search { position: relative; display: flex; align-items: center; }
+.menu-search > i.fa-search {
+    position: absolute;
+    left: 18px;
+    color: #9aa0a6;
+    font-size: .95rem;
+    pointer-events: none;
+}
+.menu-search input {
+    width: 100%;
+    padding: 14px 48px 14px 46px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    background: #fff;
+    font: inherit;
+    font-size: .95rem;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+/* Oculta el botón "X" nativo de los inputs type="search" (Chrome/Edge/Safari/IE) */
+.menu-search input::-webkit-search-cancel-button,
+.menu-search input::-webkit-search-decoration,
+.menu-search input::-webkit-search-results-button,
+.menu-search input::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.menu-search input::-ms-clear,
+.menu-search input::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+}
+.menu-search input:focus {
+    border-color: var(--primary, #e63946);
+    box-shadow: 0 0 0 4px rgba(230, 57, 70, .12);
+}
+.menu-search-clear {
+    position: absolute;
+    right: 8px;
+    width: 34px;
+    height: 34px;
+    font-size: .8rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .06);
+    color: #555;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s;
+}
+.menu-search-clear:hover { background: rgba(0, 0, 0, .12); }
+.menu-search.has-value .menu-search-clear { display: flex; }
+
+.category-chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 2px 2px 6px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.category-chips::-webkit-scrollbar { display: none; }
+.chip {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, .1);
+    background: #fff;
+    color: #3a3a3a;
+    font: inherit;
+    font-size: .87rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+.chip:hover { border-color: var(--primary, #e63946); color: var(--primary, #e63946); }
+.chip.active {
+    background: var(--primary, #e63946);
+    border-color: var(--primary, #e63946);
+    color: #fff;
+    box-shadow: 0 10px 20px -12px var(--primary, #e63946);
+}
+.chip-count {
+    font-size: .7rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .07);
+    opacity: .8;
+}
+.chip.active .chip-count { background: rgba(255, 255, 255, .28); opacity: 1; }
+
+/* ---------- Toolbar de resultados ---------- */
+.menu-body { max-width: 1280px; margin: 0 auto; padding: 34px 20px 70px; }
+.menu-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+.menu-toolbar p { margin: 0; color: #666; font-size: .92rem; }
+.menu-toolbar p strong { color: #1c1c1c; }
+.menu-sort { display: flex; align-items: center; gap: 8px; font-size: .87rem; color: #666; }
+.menu-sort select {
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    background: #fff;
+    font: inherit;
+    font-size: .87rem;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+}
+.menu-sort select:focus { border-color: var(--primary, #e63946); }
+
+/* ---------- Placeholder de imagen ---------- */
+.product-media { position: relative; overflow: hidden; }
+.product-image--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    background: linear-gradient(135deg, #f7f7f7, #ebebeb);
+    color: #cfcfcf;
+    font-size: 2.4rem;
+}
+
+/* ---------- Estado vacío ---------- */
+.menu-empty { text-align: center; padding: 70px 20px; color: #777; }
+.menu-empty[hidden] { display: none; }
+.menu-empty > i { font-size: 3rem; color: var(--primary, #e63946); opacity: .3; margin-bottom: 18px; }
+.menu-empty h3 { margin: 0 0 8px; color: #2a2a2a; font-size: 1.25rem; }
+.menu-empty p { margin: 0 0 22px; }
+
+/* ---------- Cargar más ---------- */
+.load-more-wrap { text-align: center; margin-top: 40px; }
+.load-more-wrap[hidden] { display: none; }
+
+@media (max-width: 640px) {
+    .menu-hero { padding-top: calc(var(--header-offset) + 28px); padding-bottom: 30px; }
+    .menu-body { padding: 26px 16px 60px; }
+    .menu-subnav-inner { padding: 10px 14px; }
+    .menu-toolbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+/* ============================================================
+   Skeleton Loader & Prevenir Saltos de Renderizado (UX)
+   ============================================================ */
+
+/* Fondo base oscuro para evitar el parpadeo blanco inicial */
+body {
+    background: #14161c;
+    color: var(--secondary);
+}
+
+/* Contenedor del Skeleton Card */
+.skeleton-card {
+    background: #ffffff;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+
+.skeleton-line {
+    height: 16px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line.title { width: 75%; height: 20px; }
+.skeleton-line.desc { width: 100%; height: 12px; }
+.skeleton-line.short { width: 40%; height: 24px; }
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ============================================================
+   Pantalla & Animación de Carga Sutil (UX Performance)
+   ============================================================ */
+
+/* ============================================================
+   Splash Screen: Animación 3D de Carta de Restaurante
+   ============================================================ */
+
+   #app-loader {
+    position: fixed;
+    inset: 0;
+    background: #14161c;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1200px;
+    overflow: hidden;
+    transition: opacity 0.6s ease 0.4s, visibility 0.6s ease 0.4s;
+}
+
+#app-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Contenedor general de la carta */
+.menu-splash-card {
+    position: relative;
+    width: 280px;
+    height: 380px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--gold, #d4af37);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+}
+
+/* Contenido interior (lo que se descubre al abrir la carta) */
+.menu-splash-inside {
+    text-align: center;
+    color: #fff;
+    padding: 24px;
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+}
+
+.menu-splash-inside img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin-bottom: 14px;
+    border: 2px solid var(--gold, #d4af37);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.menu-splash-inside h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.menu-splash-inside h2 span {
+    color: var(--gold, #d4af37);
+}
+
+.menu-splash-inside p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
+}
+
+/* Tapa de la carta que simula abrirse en 3D */
+.menu-splash-flap {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2d1f1f 0%, var(--primary-dark, #8b0000) 100%);
+    border-radius: 10px;
+    border: 2px solid var(--gold, #d4af37);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform-origin: left center; /* Pivote en el lomo izquierdo de la carta */
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+    z-index: 2;
+    backface-visibility: hidden;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.menu-splash-flap img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    margin-bottom: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.menu-splash-flap span {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold, #d4af37);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* Activación de la apertura al agregar la clase .hidden al loader */
+#app-loader.hidden .menu-splash-flap {
+    transform: rotateY(-110deg); /* Abre la tapa hacia la izquierda */
+}
+
+#app-loader.hidden .menu-splash-inside {
+    opacity: 1;
+    transform: scale(1);
 }

@@ -511,6 +511,35 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Bottom Navigation Bar (Visible en móviles) -->
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="#hero" class="bottom-nav-item active" title="Inicio">
+            <div class="bottom-icon-circle">
+                <i class="fas fa-home"></i>
+            </div>
+            <span>Inicio</span>
+        </a>
+        <a href="menu.html" class="bottom-nav-item" title="Menú">
+            <div class="bottom-icon-circle">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <span>Menú</span>
+        </a>
+        <button class="bottom-nav-item" id="userBottomBtn" title="Mi Cuenta">
+            <div class="bottom-icon-circle">
+                <i class="fas fa-user"></i>
+            </div>
+            <span>Cuenta</span>
+        </button>
+        <button class="bottom-nav-item cart-trigger-btn" onclick="toggleCart()" title="Carrito">
+            <div class="bottom-icon-circle">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge" id="bottomCartBadge">0</span>
+            </div>
+            <span>Carrito</span>
+        </button>
+    </nav>
+
     <script src="js/main.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>

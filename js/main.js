@@ -39,8 +39,26 @@
 
         async function loadProducts() {
             const grid = document.getElementById('productsGrid');
-            grid.textContent = 'Cargando menú...';
-
+            if (!grid) return;
+        
+            // Renderizar 4 tarjetas de esqueleto sofisticadas mientras carga Supabase
+            const skeletonHTML = Array(4).fill(`
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-line title"></div>
+                        <div class="skeleton-line desc"></div>
+                        <div class="skeleton-line desc" style="width: 60%;"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                            <div class="skeleton-line short"></div>
+                            <div style="width: 90px; height: 36px; border-radius: 20px; background: #e0e0e0;"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        
+            grid.innerHTML = skeletonHTML;
+        
             try {
                 const { data, error } = await sb
                     .from('products')
@@ -48,9 +66,9 @@
                     .eq('is_active', true)
                     .order('sort_order', { ascending: true })
                     .order('name', { ascending: true });
-
+        
                 if (error) throw error;
-
+        
                 products = (data || []).map(product => ({
                     id: product.id,
                     name: product.name,
@@ -67,7 +85,7 @@
             } catch (error) {
                 console.error('[SushiPoke] No se pudo cargar el menú desde Supabase:', error);
                 products = [];
-                grid.textContent = 'No pudimos cargar el menú en este momento. Intenta nuevamente más tarde.';
+                grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#fff;padding:40px 0;">No pudimos cargar el menú en este momento. Intenta nuevamente más tarde.</p>';
                 showToast('No se pudo conectar con el menú.');
             }
         }
@@ -193,17 +211,20 @@
         }
 
         function updateCartUI() {
-            const badge = document.getElementById('cartBadge');
             const itemsContainer = document.getElementById('cartItems');
             const footer = document.getElementById('cartFooter');
             const totalEl = document.getElementById('cartTotal');
-            if (!badge || !itemsContainer) return;
+            if (!itemsContainer) return;
 
             const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-            badge.textContent = totalQty;
-            badge.style.display = totalQty > 0 ? 'flex' : 'none';
+            // Actualización dinámica masiva para todas las vistas (Desktop header y Mobile bottom bar)
+            const badges = document.querySelectorAll('.cart-badge');
+            badges.forEach(badge => {
+                badge.textContent = totalQty;
+                badge.style.display = totalQty > 0 ? 'flex' : 'none';
+            });
 
             if (cart.length === 0) {
                 itemsContainer.innerHTML = `
