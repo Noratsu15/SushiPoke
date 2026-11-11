@@ -1423,7 +1423,7 @@ body {
 
 /* Fondo base oscuro para evitar el parpadeo blanco inicial */
 body {
-    background: #14161c;
+    /* background: #14161c; */
     color: var(--secondary);
 }
 
@@ -1470,10 +1470,6 @@ body {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
-
-/* ============================================================
-   Pantalla & Animación de Carga Sutil (UX Performance)
-   ============================================================ */
 
 /* ============================================================
    Splash Screen: Animación 3D de Carta de Restaurante
@@ -1594,4 +1590,140 @@ body {
 #app-loader.hidden .menu-splash-inside {
     opacity: 1;
     transform: scale(1);
+}
+
+/* ============================================================
+   Splash Screen: Animación de Corte de Atún / Split Screen
+   ============================================================ */
+
+   #app-loader-inicio {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    overflow: hidden;
+}
+
+/* Paneles deslizantes (Cortina Superior e Inferior) */
+.splash-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 50%;
+    background: #14161c;
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.splash-panel.top {
+    top: 0;
+    border-bottom: 2px solid var(--gold, #d4af37);
+    align-items: flex-end;
+}
+
+.splash-panel.bottom {
+    bottom: 0;
+    align-items: flex-start;
+}
+
+/* Contenido central de carga antes del corte */
+.splash-content {
+    position: absolute;
+    z-index: 3;
+    text-align: center;
+    color: #fff;
+    transition: opacity 0.3s ease;
+}
+
+.splash-content img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 2px solid var(--gold, #d4af37);
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+    margin-bottom: 15px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.splash-content h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.splash-content h2 span {
+    color: var(--gold, #d4af37);
+}
+
+.splash-content p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 1px;
+}
+
+/* Línea de corte (Simulando el filo del cuchillo en el centro) */
+.splash-cut-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary, #c41e3a);
+    box-shadow: 0 0 15px var(--primary, #c41e3a);
+    z-index: 4;
+    transform: scaleX(0);
+    transition: transform 0.4s ease-in-out;
+}
+
+/* Icono del cuchillo deslizándose para hacer el corte */
+.splash-knife {
+    position: absolute;
+    top: calc(50% - 25px);
+    left: -60px;
+    font-size: 2.5rem;
+    color: var(--gold, #d4af37);
+    z-index: 5;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ============================================================
+   Secuencia de Activación del Corte
+   ============================================================ */
+
+/* Paso 1: El cuchillo cruza la pantalla de izquierda a derecha */
+#app-loader-inicio.cutting .splash-knife {
+    transform: translateX(calc(100vw + 120px)) rotate(-45deg);
+}
+
+#app-loader-inicio.cutting .splash-cut-line {
+    transform: scaleX(1);
+}
+
+/* Paso 2: Las cortinas se abren hacia arriba y hacia abajo tras el corte */
+#app-loader-inicio.hidden {
+    pointer-events: none;
+}
+
+#app-loader-inicio.hidden .splash-content,
+#app-loader-inicio.hidden .splash-cut-line,
+#app-loader-inicio.hidden .splash-knife {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#app-loader-inicio.hidden .splash-panel.top {
+    transform: translateY(-100%);
+}
+
+#app-loader-inicio.hidden .splash-panel.bottom {
+    transform: translateY(100%);
 }

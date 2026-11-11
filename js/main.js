@@ -6,8 +6,50 @@
         let sliderIndex = 0;
         const HOME_PRODUCT_LIMIT = 8;
 
+        // ============================================================
+        //   Splash Screen: Animación de Corte Inicial en el DOM
+        // ============================================================
+        function initSplashScreen() {
+            if (!document.getElementById('app-loader-inicio')) {
+                const loaderHTML = `
+                    <div id="app-loader-inicio">
+                        <div class="splash-panel top"></div>
+                        <div class="splash-panel bottom"></div>
+                        
+                        <div class="splash-cut-line"></div>
+                        <div class="splash-knife">🔪</div>
+                        
+                        <div class="splash-content">
+                            <img src="favicon_io/apple-touch-icon.svg" alt="SushiPoke" />
+                            <h2>Sushi <span>Poke</span></h2>
+                            <p>Preparando el corte perfecto...</p>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('afterbegin', loaderHTML);
+            }
+        }
+        
+        function dismissSplashScreen() {
+            // CORRECCIÓN: Apuntar al ID correcto 'app-loader-inicio'
+            const loader = document.getElementById('app-loader-inicio');
+            if (!loader) return;
+        
+            // Disparar la animación del cuchillo cortando
+            setTimeout(() => {
+                loader.classList.add('cutting');
+        
+                // Tras completarse el corte, abrir las cortinas superior e inferior
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                }, 600);
+            }, 400);
+        }
+
+
         // Init: espera a Supabase antes de pintar el menú.
         document.addEventListener('DOMContentLoaded', async () => {
+            initSplashScreen();
             updateCartUI();
             initSliderDots();
             initScrollAnimations();
@@ -17,6 +59,7 @@
             renderProducts();
             syncCartPrices();
             updateCartUI();
+            dismissSplashScreen();
         });
 
         const CATEGORY_ORDER = ['rolls', 'tempurizados', 'entradas', 'ensaladas', 'poke', 'bebidas', 'postres'];
