@@ -55,11 +55,11 @@
             initScrollAnimations();
             initHeaderScroll();
             initPhoneMask();
+            dismissSplashScreen();
             await loadProducts();
             renderProducts();
             syncCartPrices();
             updateCartUI();
-            dismissSplashScreen();
         });
 
         const CATEGORY_ORDER = ['rolls', 'tempurizados', 'entradas', 'ensaladas', 'poke', 'bebidas', 'postres'];
